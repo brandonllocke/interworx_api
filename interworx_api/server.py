@@ -1,7 +1,9 @@
 import ssl
+import sys
 import xmlrpc.client
 
-from .users import Users
+from .users import NodeWorxUsers
+from .users import SiteWorxUsers
 
 class Server():
     def __init__(self, server_url, key):
@@ -14,21 +16,27 @@ class Server():
 
     def get(self, key, path, cmd, params=None):
         params = params or {}
-        return self.server.iworx.route(
+        response = self.server.iworx.route(
             key, path, cmd, params)
+        try:
+            assert(response['status'] == 0)
+            return response['payload']
+        except AssertionError as e:
+            pparams = '{' + ''.join(['{0}={1},'.format(k, v) for k,v in params.items()]) + '}'
+            request_attributes = ('url=%s, path=%s, cmd=%s, params=%s' % (str(self.url), str(path), str(cmd), str(pparams)))
+            print(request_attributes)
+            sys.exit('Error: ' + str(response['status']) + ' - ' + response['payload'])
 
 
 class NodeWorx():
-    def __init__(self, server, ctrl_prefix='/nodeworx'):
+    def __init__(self, server):
         self.url = server.url
         self.key = server.key
-        self.ctrl_prefix = ctrl_prefix
-        self.users = Users(server, self.ctrl_prefix)
+        self.users = NodeWorxUsers(server)
 
 
 class SiteWorx():
-    def __init__(self, server, ctrl_prefix='/siteworx'):
+    def __init__(self, server):
         self.url = server.url
         self.key = server.key
-        self.ctrl_prefix = ctrl_prefix
-        self.users = Users(server, self.ctrl_prefix)
+        self.users = SiteWorxUsers(server)
