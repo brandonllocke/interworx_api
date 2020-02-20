@@ -4,6 +4,9 @@ import xmlrpc.client
 
 from .users import NodeWorxUsers
 from .users import SiteWorxUsers
+from .apikey import ApiKey
+from .backups import NodeWorxBackups
+from .backups import SiteWorxBackups
 
 class Server():
     def __init__(self, server_url, key):
@@ -33,6 +36,8 @@ class NodeWorx():
         self.url = server.url
         self.key = server.key
         self.users = NodeWorxUsers(server)
+        self.apikey = ApiKey(server)
+        self.backup = NodeWorxBackups(server)
 
 
 class SiteWorx():
@@ -40,3 +45,4 @@ class SiteWorx():
         self.url = server.url
         self.key = server.key
         self.users = SiteWorxUsers(server)
+        self.backup = SiteWorxBackups(server)

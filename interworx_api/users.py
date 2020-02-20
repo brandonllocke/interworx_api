@@ -12,84 +12,94 @@ class Users:
             return key
         return self.key
 
-    def _query_xmlrpc(
+    def _xmlrpc_query(self, action, working_domain=None, **attributes):
+        key = self._modify_key(working_domain)
+        return self.server.get(key, self.controller, action, attributes)
 
     def activate(self, working_domain=None, **attributes):
-        key = self._modify_key(working_domain)
-        response = self.server.get(key, self.controller, 'activate', attributes)
-        print(response['payload'])
+        return self._xmlrpc_query('activate', working_domain, **attributes)
 
     def add(self, working_domain=None, **attributes):
-        key = self._modify_key(working_domain)
-        response = self.server.get(key, self.controller, 'add', attributes)
-        print(response['payload'])
+        return self._xmlrpc_query('add', working_domain, **attributes)
 
     def deactivate(self, working_domain=None, **attributes):
-        key = self._modify_key(working_domain)
-        response = self.server.get(key, self.controller, 'deactivate', attributes)
-        print(response['payload'])
+        return self._xmlrpc_query('deactivate', working_domain, **attributes)
 
     def delete(self, working_domain=None, **attributes):
-        key = self._modify_key(working_domain)
-        response = self.server.get(key, self.controller, 'delete', attributes)
-        print(response['payload'])
+        return self._xmlrpc_query('delete', working_domain, **attributes)
 
     def edit(self, working_domain=None, **attributes):
-        key = self._modify_key(working_domain)
-        response = self.server.get(key, self.controller, 'edit', attributes)
-        print(response['payload'])
+        return self._xmlrpc_query('edit', working_domain, **attributes)
 
-    def list_deletable(self, working_domain=None):
-        key = self._modify_key(working_domain)
-        response = self.server.get(key, self.controller, 'listDeletable')
-        for user in response['payload']:
-            print(user)
+    def list_deletable(self, working_domain=None, **attributes):
+        return self._xmlrpc_query('listDeletable', working_domain, **attributes)
 
-    def list_editable(self, working_domain=None):
-        key = self._modify_key(working_domain)
-        response = self.server.get(key, self.controller, 'listEditable')
-        for user in response['payload']:
-            print(user)
+    def list_editable(self, working_domain=None, **attributes):
+        return self._xmlrpc_query('listEditable', working_domain, **attributes)
 
-    def list_users(self, classname, working_domain=None):
+    def list_users(self, classname, working_domain=None, **attributes):
         users = []
-        key = self._modify_key(working_domain)
-        response = self.server.get(key, self.controller, 'listUsers')
+        response = self._xmlrpc_query('listUsers', working_domain, **attributes)
         for user in response:
             users.append(classname(user))
         return users
 
-    def list_working_user(self, classname, working_domain=None):
-        key = self._modify_key(working_domain)
-        response = self.server.get(key, self.controller, 'listWorkingUser')
+    def list_working_user(self, classname, working_domain=None, **attributes):
+        response = self._xmlrpc_query('listWorkingUser', working_domain, **attributes)
         return classname(response)
+
+    def query_edit(self, working_domain=None, **attributes):
+        return self._xmlrpc_query('queryEdit', working_domain, **attributes)
 
 class NodeWorxUsers(Users):
     def __init__(self, server):
         super().__init__(server)
         self.controller = '/nodeworx/users'
 
+    def _build_user_list(self, response):
+        users = []
+        for user in response:
+            users.append(NodeWorxUser({'email': user[0]}))
+        return users
+
+    def list_deletable(self):
+        response = super().list_deletable()
+        return self._build_user_list(response)
+
+    def list_editable(self):
+        response = super().list_editable()
+        return self._build_user_list(response)
+
     def is_reseller(self):
-        response = self.server.get(self.key, self.controller, 'isReseller')
-        return response
+        return self._xmlrpc_query('isReseller')
 
     def list_users(self):
-        response = super().list_users(NodeWorxUser)
-        return response
+        return super().list_users(NodeWorxUser)
 
     def list_working_user(self):
-        response = super().list_working_user(NodeWorxUser)
-        return response
+        return super().list_working_user(NodeWorxUser)
 
 class SiteWorxUsers(Users):
     def __init__(self, server):
         super().__init__(server)
         self.controller = '/siteworx/users'
 
+    def _build_user_list(self, response):
+        users = []
+        for user in response:
+            users.append(SiteWorxUser({'email': user}))
+        return users
+
+    def list_deletable(self, working_domain):
+        response = super().list_deletable(working_domain)
+        return self._build_user_list(response)
+
+    def list_editable(self, working_domain):
+        response = super().list_editable(working_domain)
+        return self._build_user_list(response)
+
     def list_users(self, working_domain):
-        response = super().list_users(SiteWorxUser, working_domain)
-        return response
+        return super().list_users(SiteWorxUser, working_domain)
 
     def list_working_user(self, working_domain):
-        response = super().list_working_user(SiteWorxUser, working_domain)
-        return response
+        return super().list_working_user(SiteWorxUser, working_domain)
