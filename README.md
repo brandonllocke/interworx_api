@@ -7,6 +7,8 @@ This is still very much in alpha. As of now, the only completed component is the
 ## Usage:
 
     # Connect to server:
+    URL = 'myserver.domain.com'
+    KEY = '<api key from NodeWorx>'
     server = Server(URL, KEY)
 
     # Get all NodeWorx users:
