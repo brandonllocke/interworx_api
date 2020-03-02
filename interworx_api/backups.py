@@ -42,7 +42,38 @@ class NodeWorxBackups(Backups):
             backups.append(BackupInfo(backup))
         return backups
 
+    def structureonly(self, **attributes):
+        return self._xmlrpc_query('structureonly', **attributes)
+
 class SiteWorxBackups(Backups):
     def __init__(self, server):
         super().__init__(server)
         self.controller = '/siteworx/backup'
+
+    def _organize_backups(self, response):
+        backups = []
+        for backup in response:
+            backups.append(BackupInfo(backup))
+        return backups
+
+    def create(self, working_domain, **attributes):
+        return self._xmlrpc_query('create', working_domain, **attributes)
+
+    def delete(self, working_domain, **attributes):
+        return self._xmlrpc_query('delete', working_domain, **attributes)
+
+    def list_all_backups(self, working_domain, **attributes):
+        response = self._xmlrpc_query('listAllBackups', working_domain, **attributes)
+        return self._organize_backups(response)
+
+    def list_daily_backups(self, working_domain, **attributes):
+        response = self._xmlrpc_query('listDailyBackups', working_domain, **attributes)
+        return self._organize_backups(response)
+
+    def list_weekly_backups(self, working_domain, **attributes):
+        response = self._xmlrpc_query('listWeeklyBackups', working_domain, **attributes)
+        return self._organize_backups(response)
+
+    def list_monthly_backups(self, working_domain, **attributes):
+        response = self._xmlrpc_query('listMonthlyBackups', working_domain, **attributes)
+        return self._organize_backups(response)

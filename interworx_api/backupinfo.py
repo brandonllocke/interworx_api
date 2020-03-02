@@ -8,7 +8,7 @@ class BackupInfo:
         self.domain_options = info.get('domain_options')
         self.filedate = info.get('filedate')
         self.complete = info.get('complete')
-        self.domain = info.get('domain')
+        self.domain = info.get('domain', '')
 
     def __str__(self):
         return self.filename

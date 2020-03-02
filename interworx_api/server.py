@@ -7,6 +7,7 @@ from .users import SiteWorxUsers
 from .apikey import ApiKey
 from .backups import NodeWorxBackups
 from .backups import SiteWorxBackups
+from .firewall import Firewall
 
 class Server():
     def __init__(self, server_url, key):
@@ -38,6 +39,7 @@ class NodeWorx():
         self.users = NodeWorxUsers(server)
         self.apikey = ApiKey(server)
         self.backup = NodeWorxBackups(server)
+        self.firewall = Firewall(server)
 
 
 class SiteWorx():
