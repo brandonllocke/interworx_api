@@ -19,7 +19,7 @@ class Firewall:
     def ipv6_settings(self, **attributes):
         return self._xmlrpc_query('ipv6Settings', **attributes)
 
-    def is_running(self, **attributes):
+    def is_running(self):
         return self._xmlrpc_query('isRunning')
 
     def is_running_on_node(self, **attributes):

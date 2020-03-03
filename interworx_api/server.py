@@ -1,5 +1,6 @@
 import ssl
 import sys
+import traceback
 import xmlrpc.client
 
 from .users import NodeWorxUsers
@@ -23,13 +24,12 @@ class Server():
         response = self.server.iworx.route(
             key, path, cmd, params)
         try:
-            assert(response['status'] == 0)
-            return response['payload']
-        except AssertionError as e:
-            pparams = '{' + ''.join(['{0}={1},'.format(k, v) for k,v in params.items()]) + '}'
-            request_attributes = ('url=%s, path=%s, cmd=%s, params=%s' % (str(self.url), str(path), str(cmd), str(pparams)))
-            print(request_attributes)
-            sys.exit('Error: ' + str(response['status']) + ' - ' + response['payload'])
+            if response['status'] == 0:
+                return response['payload']
+            else:
+                raise ValidationError(response['status'], response['payload'])
+        except ValidationError as e:
+            sys.exit(e)
 
 
 class NodeWorx():
@@ -48,3 +48,13 @@ class SiteWorx():
         self.key = server.key
         self.users = SiteWorxUsers(server)
         self.backup = SiteWorxBackups(server)
+
+class ValidationError(Exception):
+    def __init__(self, status, payload):
+        super().__init__(payload)
+        self.status = status
+        self.payload = payload
+
+    def __str__(self):
+        return f'''Server responded with an exit code of: {self.status}.
+The server's response was: {self.payload}.'''            
