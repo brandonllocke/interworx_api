@@ -9,6 +9,8 @@ from .apikey import ApiKey
 from .backups import NodeWorxBackups
 from .backups import SiteWorxBackups
 from .firewall import Firewall
+from .ftp import NodeWorxFTP
+from .siteworx import SWAccounts
 
 class Server():
     def __init__(self, server_url, key):
@@ -40,6 +42,8 @@ class NodeWorx():
         self.apikey = ApiKey(server)
         self.backup = NodeWorxBackups(server)
         self.firewall = Firewall(server)
+        self.ftp = NodeWorxFTP(server)
+        self.siteworx = SWAccounts(server)
 
 
 class SiteWorx():
