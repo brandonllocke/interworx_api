@@ -59,3 +59,12 @@ class NodeWorxFTP(FTP):
         path = response['file']
         file_content = response['file_content']
         return path, file_content
+
+    def query_server_options(self):
+        return self._xmlrpc_query('queryServerOptions')
+
+    def query_sftp_options(self):
+        return self._xmlrpc_query('querySftpOptions')
+
+    def restart(self, **attributes):
+        return self._xmlrpc_query('restart', **attributes)
