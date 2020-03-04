@@ -4,15 +4,23 @@ class SWAccounts:
         self.key = server.key
         self.controller = '/nodeworx/siteworx'
 
-    def _modify_key(self, working_domain=None):
-        if working_domain is not None:
-            key = {'apikey': self.key, 'domain': working_domain}
-            return key
-        return self.key
+    def _xmlrpc_query(self, action, **attributes):
+        return self.server.get(self.key, self.controller, action, attributes)
 
-    def _xmlrpc_query(self, action, working_domain=None, **attributes):
-        key = self._modify_key(working_domain)
-        return self.server.get(key, self.controller, action, attributes)
+    def add(self, **attributes):
+        return self._xmlrpc_query('add', **attributes)
 
-    def add(self, working_domain=None, **attributes):
-        return self._xmlrpc_query('add', working_domain, **attributes)
+    def add_ip(self, **attributes):
+        return self._xmlrpc_query('addIp', **attributes)
+
+    def delete(self, **attributes):
+        return self._xmlrpc_query('delete', **attributes)
+    
+    def delete_config(self, **attributes):
+        return self._xmlrpc_query('deleteConfig', **attributes)
+
+    def edit(self, **attributes):
+        return self._xmlrpc_query('edit', **attributes)
+
+    def list_accounts(self, **attributes):
+        return self._xmlrpc_query('listAccounts', **attributes)
