@@ -68,3 +68,21 @@ class NodeWorxFTP(FTP):
 
     def restart(self, **attributes):
         return self._xmlrpc_query('restart', **attributes)
+
+    def rrd_graph(self, **attributes):
+        return self._xmlrpc_query('rrdGraph', **attributes)
+    
+    def server_options(self, **attributes):
+        return self._xmlrpc_query('serverOptions', **attributes)
+    
+    def sftp_options(self, **attributes):
+        return self._xmlrpc_query('sftpOptions', **attributes)
+
+    def start(self, **attributes):
+        return self._xmlrpc_query('start', **attributes)
+
+    def start_on_boot(self, **attributes):
+        return self._xmlrpc_query('startOnBoot', **attributes)
+
+    def stop(self, **attributes):
+        return self._xmlrpc_query('stop', **attributes)
