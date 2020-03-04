@@ -1,6 +1,3 @@
-from .accountbackupinfo import AccountBackupInfo
-from .backupinfo import BackupInfo
-
 class Backups:
     def __init__(self, server):
         self.server = server
@@ -32,14 +29,14 @@ class NodeWorxBackups(Backups):
         accounts = []
         response = self._xmlrpc_query('queryAccounts', **attributes)
         for account in response:
-            accounts.append(AccountBackupInfo(account))
+            accounts.append(AccountBackup(account))
         return accounts
 
     def query_backups(self, **attributes):
         backups = []
         response = self._xmlrpc_query('queryBackups', **attributes)
         for backup in response:
-            backups.append(BackupInfo(backup))
+            backups.append(Backup(backup))
         return backups
 
     def structureonly(self, **attributes):
@@ -53,7 +50,7 @@ class SiteWorxBackups(Backups):
     def _organize_backups(self, response):
         backups = []
         for backup in response:
-            backups.append(BackupInfo(backup))
+            backups.append(Backup(backup))
         return backups
 
     def create(self, working_domain, **attributes):
@@ -77,3 +74,37 @@ class SiteWorxBackups(Backups):
     def list_monthly_backups(self, working_domain, **attributes):
         response = self._xmlrpc_query('listMonthlyBackups', working_domain, **attributes)
         return self._organize_backups(response)
+
+class Backup:
+    def __init__(self, info):
+        self.filepath = info.get('filepath')
+        self.filename = info.get('filename')
+        self.filesize = info.get('filesize')
+        self.filesize_bytes = info.get('filesize_bytes')
+        self.type = info.get('type')
+        self.domain_options = info.get('domain_options')
+        self.filedate = info.get('filedate')
+        self.complete = info.get('complete')
+        self.domain = info.get('domain', '')
+
+    def __str__(self):
+        return self.filename
+
+    def __repr__(self):
+        return self.filename
+
+class AccountBackup:
+    def __init__(self, info):
+        self.name = info.get('username')
+        self.nickname = info.get('nickname')
+        self.email = info.get('email')
+        self.domain = info.get('domain')
+        self.backup_count = info.get('backup_count')
+        self.backup_dir_size = info.get('backup_dir_size')
+        self.nodeworx_id = info.get('nodeworx_id')
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return self.name
