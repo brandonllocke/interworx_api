@@ -1,3 +1,5 @@
+from .fields import Fields
+
 class Users:
     def __init__(self, server):
         self.server = server
@@ -12,9 +14,19 @@ class Users:
     def _xmlrpc_query(self, action, working_domain=None, **attributes):
         key = self._modify_key(working_domain)
         return self.server.get(key, self.controller, action, attributes)
+    
+    def _parse_fields(self, possible_fields, **attributes):
+        fields = Fields(possible_fields, **attributes)
+        reqs_met = fields.check_required_fields()
+        validated = fields.validate_fields()
+        if reqs_met and validated:
+            return True
+        return False
 
     def activate(self, working_domain=None, **attributes):
-        return self._xmlrpc_query('activate', working_domain, **attributes)
+        possible_fields = {'required': {'user': list}}
+        if self._parse_fields(possible_fields, **attributes):
+            print(self._xmlrpc_query('activate', working_domain, **attributes))
 
     def add(self, working_domain=None, **attributes):
         return self._xmlrpc_query('add', working_domain, **attributes)
