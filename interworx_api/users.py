@@ -72,6 +72,24 @@ class NodeWorxUsers(Users):
             users.append(NodeWorxUser({'email': user[0]}))
         return users
 
+    def add(self, **attributes):
+        possible_fields = {
+            'required': {
+                'nickname': str, 
+                'email': str,
+                'password': str,
+                'confirm_password': str
+            },
+            'optional': {
+                'language': str,
+                'theme': str,
+                'menu_style': str,
+                'encrypted': str,
+                'perms': list
+            }}
+        if self._parse_fields(possible_fields, **attributes):
+             print(super().add(**attributes))
+
     def list_deletable(self):
         response = super().list_deletable()
         return self._build_user_list(response)
