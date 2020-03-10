@@ -87,9 +87,11 @@ class SiteWorxBackups(Backups):
             'optional': {
                 'email_address': str,
                 'domain_options': str,
-                'exclude_extensions': list
+                'exclude_extensions': list,
             }
         }
+        if attributes.get('type') == 'partial':
+            possible_fields['required']['options'] = str
         if self._parse_fields(possible_fields, **attributes):
             return self._xmlrpc_query('create', working_domain, **attributes)
 
