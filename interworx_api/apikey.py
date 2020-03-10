@@ -1,11 +1,9 @@
-class ApiKey:
-    def __init__(self, server):
-        self.server = server
-        self.key = server.key
-        self.controller = '/nodeworx/apikey'
+from .controller import Controller
 
-    def _xmlrpc_query(self, action):
-        return self.server.get(self.key, self.controller, action)
+class ApiKey(Controller):
+    def __init__(self, server):
+        super().__init__(server)
+        self.controller = '/nodeworx/apikey'
 
     def list_api_key(self):
         return self._xmlrpc_query('listApikey')

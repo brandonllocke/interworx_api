@@ -1,27 +1,8 @@
-from .fields import Fields
+from .controller import Controller
 
-class Users:
+class Users(Controller):
     def __init__(self, server):
-        self.server = server
-        self.key = server.key
-
-    def _modify_key(self, working_domain=None):
-        if working_domain is not None:
-            key = {'apikey': self.key, 'domain': working_domain}
-            return key
-        return self.key
-
-    def _xmlrpc_query(self, action, working_domain=None, **attributes):
-        key = self._modify_key(working_domain)
-        return self.server.get(key, self.controller, action, attributes)
-    
-    def _parse_fields(self, possible_fields, **attributes):
-        fields = Fields(possible_fields, **attributes)
-        reqs_met = fields.check_required_fields()
-        validated = fields.validate_fields()
-        if reqs_met and validated:
-            return True
-        return False
+        super().__init__(server)
 
     def activate(self, working_domain=None, **attributes):
         possible_fields = {'required': {'user': list}}
@@ -32,10 +13,24 @@ class Users:
         return self._xmlrpc_query('add', working_domain, **attributes)
 
     def deactivate(self, working_domain=None, **attributes):
-        return self._xmlrpc_query('deactivate', working_domain, **attributes)
+        possible_fields = {
+            'required': {
+                'user': list
+            },
+            'optional': {}
+        }
+        if self._parse_fields(possible_fields, **attributes):
+            return self._xmlrpc_query('deactivate', working_domain, **attributes)
 
     def delete(self, working_domain=None, **attributes):
-        return self._xmlrpc_query('delete', working_domain, **attributes)
+        possible_fields = {
+            'required': {
+                'user': list
+            },
+            'optional': {}
+        }
+        if self._parse_fields(possible_fields, **attributes):
+            return self._xmlrpc_query('delete', working_domain, **attributes)
 
     def edit(self, working_domain=None, **attributes):
         return self._xmlrpc_query('edit', working_domain, **attributes)
@@ -90,6 +85,24 @@ class NodeWorxUsers(Users):
         if self._parse_fields(possible_fields, **attributes):
              print(super().add(**attributes))
 
+    def edit(self, **attributes):
+        possible_fields = {
+            'required': {
+                'user': str
+            },
+            'optional': {
+                'nickname': str, 
+                'email': str,
+                'language': str,
+                'theme': str,
+                'menu_style': str,
+                'encrypted': str,
+                'password': str,
+                'confirm_password': str
+            }}
+        if self._parse_fields(possible_fields, **attributes):
+             print(super().edit(**attributes))
+
     def list_deletable(self):
         response = super().list_deletable()
         return self._build_user_list(response)
@@ -121,6 +134,43 @@ class SiteWorxUsers(Users):
         for user in response:
             users.append(SiteWorxUser({'email': user}))
         return users
+
+    def add(self, working_domain, **attributes):
+        possible_fields = {
+            'required': {
+                'nickname': str, 
+                'email': str,
+                'password': str,
+                'confirm_password': str
+            },
+            'optional': {
+                'language': str,
+                'theme': str,
+                'menu_style': str,
+                'encrypted': str,
+                'perms': list,
+                'locked_domains': str
+            }}
+        if self._parse_fields(possible_fields, **attributes):
+             print(super().add(working_domain, **attributes))
+    
+    def edit(self, working_domain, **attributes):
+        possible_fields = {
+            'required': {
+                'user': str, 
+            },
+            'optional': {
+                'language': str,
+                'nickname': str, 
+                'email': str,
+                'password': str,
+                'confirm_password': str,
+                'theme': str,
+                'menu_style': str,
+                'encrypted': str,
+            }}
+        if self._parse_fields(possible_fields, **attributes):
+             print(super().edit(working_domain, **attributes))
 
     def list_deletable(self, working_domain):
         response = super().list_deletable(working_domain)

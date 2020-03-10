@@ -1,17 +1,8 @@
-class Backups:
+from .controller import Controller
+
+class Backups(Controller):
     def __init__(self, server):
-        self.server = server
-        self.key = server.key
-
-    def _modify_key(self, working_domain=None):
-        if working_domain is not None:
-            key = {'apikey': self.key, 'domain': working_domain}
-            return key
-        return self.key
-
-    def _xmlrpc_query(self, action, working_domain=None, **attributes):
-        key = self._modify_key(working_domain)
-        return self.server.get(key, self.controller, action, attributes)
+        super().__init__(server)
 
     def restore(self, working_domain=None, **attributes):
         return self._xmlrpc_query('restore', **attributes)
@@ -23,24 +14,58 @@ class NodeWorxBackups(Backups):
         self.controller = '/nodeworx/backup'
 
     def fullbackup(self, **attributes):
-        return self._xmlrpc_query('fullbackup', **attributes)
+        possible_fields = {
+            'required': {'domains': list},
+            'optional': {'email': str}
+        }
+        if self._parse_fields(possible_fields, **attributes):
+            return self._xmlrpc_query('fullbackup', **attributes)
 
     def query_accounts(self, **attributes):
         accounts = []
-        response = self._xmlrpc_query('queryAccounts', **attributes)
-        for account in response:
-            accounts.append(AccountBackup(account))
+        possible_fields = {
+            'required': {'reseller': str},
+            'optional': {}
+        }
+        if self._parse_fields(possible_fields, **attributes):
+            response = self._xmlrpc_query('queryAccounts', **attributes)
+            for account in response:
+                accounts.append(AccountBackup(account))
         return accounts
 
     def query_backups(self, **attributes):
         backups = []
-        response = self._xmlrpc_query('queryBackups', **attributes)
-        for backup in response:
-            backups.append(Backup(backup))
+        possible_fields = {
+            'required': {'domain': str},
+            'optional': {}
+        }
+        if self._parse_fields(possible_fields, **attributes):
+            response = self._xmlrpc_query('queryBackups', **attributes)
+            for backup in response:
+                backups.append(Backup(backup))
         return backups
 
+    def restore(self, **attributes):
+        possible_fields = {
+            'required': {
+                'domain': str,
+                'file': str
+            },
+            'optional': {
+                'confirm_action': int
+            }
+        }
+        if self._parse_fields(possible_fields, **attributes):
+            return super().restore(**attributes)
+
     def structureonly(self, **attributes):
-        return self._xmlrpc_query('structureonly', **attributes)
+        possible_fields = {
+            'required': {'domains': list},
+            'optional': {'email': str}
+        }
+        if self._parse_fields(possible_fields, **attributes):
+            return self._xmlrpc_query('structureonly', **attributes)
+
 
 class SiteWorxBackups(Backups):
     def __init__(self, server):
@@ -54,10 +79,27 @@ class SiteWorxBackups(Backups):
         return backups
 
     def create(self, working_domain, **attributes):
-        return self._xmlrpc_query('create', working_domain, **attributes)
+        possible_fields = {
+            'required': {
+                'type': str,
+                'location': str
+            },
+            'optional': {
+                'email_address': str,
+                'domain_options': str,
+                'exclude_extensions': list
+            }
+        }
+        if self._parse_fields(possible_fields, **attributes):
+            return self._xmlrpc_query('create', working_domain, **attributes)
 
     def delete(self, working_domain, **attributes):
-        return self._xmlrpc_query('delete', working_domain, **attributes)
+        possible_fields = {
+            'required': {'backups': list},
+            'optional': {}
+        }
+        if self._parse_fields(possible_fields, **attributes):
+            return self._xmlrpc_query('delete', working_domain, **attributes)
 
     def list_all_backups(self, working_domain, **attributes):
         response = self._xmlrpc_query('listAllBackups', working_domain, **attributes)
@@ -74,6 +116,18 @@ class SiteWorxBackups(Backups):
     def list_monthly_backups(self, working_domain, **attributes):
         response = self._xmlrpc_query('listMonthlyBackups', working_domain, **attributes)
         return self._organize_backups(response)
+
+    def restore(self, working_domain, **attributes):
+        possible_fields = {
+            'required': {
+                'filetype': str,
+                'file': str
+            },
+            'optional': {}
+        }
+        if self._parse_fields(possible_fields, **attributes):
+            return super().restore(working_domain, **attributes)
+
 
 class Backup:
     def __init__(self, info):
@@ -92,6 +146,7 @@ class Backup:
 
     def __repr__(self):
         return self.filename
+
 
 class AccountBackup:
     def __init__(self, info):
