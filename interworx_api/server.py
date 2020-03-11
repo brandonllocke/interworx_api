@@ -10,6 +10,7 @@ from .backups import NodeWorxBackups
 from .backups import SiteWorxBackups
 from .firewall import Firewall
 from .ftp import NodeWorxFTP
+from .ftp import SiteWorxFTP
 from .siteworx import SWAccounts
 
 class Server():
@@ -52,6 +53,8 @@ class SiteWorx():
         self.key = server.key
         self.users = SiteWorxUsers(server)
         self.backup = SiteWorxBackups(server)
+        self.ftp = SiteWorxFTP(server)
+
 
 class ValidationError(Exception):
     def __init__(self, status, payload):
