@@ -6,10 +6,10 @@ class ApiKey(Controller):
         self.controller = '/nodeworx/apikey'
 
     def list_api_key(self):
-        return self._xmlrpc_query('listApikey')
+        return self._api_request('listApikey')
 
     def generate(self):
-        return self._xmlrpc_query('generate')
+        return self._api_request('generate')
 
     def delete(self):
-        return self._xmlrpc_query('delete')
+        return self._api_request('delete')

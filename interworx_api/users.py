@@ -3,57 +3,65 @@ from .controller import Controller
 class Users(Controller):
     def __init__(self, server):
         super().__init__(server)
-
-    def activate(self, working_domain=None, **attributes):
-        possible_fields = {'required': {'user': list}}
-        if self._parse_fields(possible_fields, **attributes):
-            print(self._xmlrpc_query('activate', working_domain, **attributes))
-
-    def add(self, working_domain=None, **attributes):
-        return self._xmlrpc_query('add', working_domain, **attributes)
-
-    def deactivate(self, working_domain=None, **attributes):
-        possible_fields = {
-            'required': {
-                'user': list
-            },
-            'optional': {}
-        }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('deactivate', working_domain, **attributes)
-
-    def delete(self, working_domain=None, **attributes):
-        possible_fields = {
-            'required': {
-                'user': list
-            },
-            'optional': {}
-        }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('delete', working_domain, **attributes)
-
-    def edit(self, working_domain=None, **attributes):
-        return self._xmlrpc_query('edit', working_domain, **attributes)
-
-    def list_deletable(self, working_domain=None):
-        return self._xmlrpc_query('listDeletable', working_domain)
-
-    def list_editable(self, working_domain=None):
-        return self._xmlrpc_query('listEditable', working_domain)
-
-    def list_users(self, classname, working_domain=None):
+    
+    def _build_user_list(self, response, classname):
         users = []
-        response = self._xmlrpc_query('listUsers', working_domain)
         for user in response:
             users.append(classname(user))
         return users
 
-    def list_working_user(self, classname, working_domain=None):
-        response = self._xmlrpc_query('listWorkingUser', working_domain)
+    def _build_email_list(self, response):
+        users = []
+        for user in response:
+            users.append(user[0])
+        return users
+
+    def add(self, fields=None, wd=None, **attributes):
+        return self._api_request('add', fields=fields, wd=wd, **attributes)
+
+    def activate(self, wd=None, **attributes):
+        fields = {'required': {'user': list}}
+        return self._api_request('activate', fields=fields, wd=wd, **attributes)
+
+    def deactivate(self, wd=None, **attributes):
+        fields = {
+            'required': {
+                'user': list
+            },
+            'optional': {}
+        }
+        return self._api_request('deactivate', fields=fields, wd=wd, **attributes)
+
+    def delete(self, wd=None, **attributes):
+        fields = {
+            'required': {
+                'user': list
+            },
+            'optional': {}
+        }
+        return self._api_request('delete', fields=fields, wd=wd, **attributes)
+
+    def edit(self, fields=None, wd=None, **attributes):
+        return self._api_request('edit', fields=fields, wd=wd, **attributes)
+
+    def list_deletable(self, wd=None):
+        response = self._api_request('listDeletable', wd=wd)
+        return self._build_email_list(response)
+
+    def list_editable(self, wd=None):
+        response = self._api_request('listEditable', wd=wd)
+        return self._build_email_list(response)
+
+    def list_users(self, classname, wd=None):
+        response = self._api_request('listUsers', wd=wd)
+        return self._build_user_list(response, classname)
+
+    def list_working_user(self, classname, wd=None):
+        response = self._api_request('listWorkingUser', wd=wd)
         return classname(response)
 
-    def query_edit(self, working_domain=None, **attributes):
-        return self._xmlrpc_query('queryEdit', working_domain, **attributes)
+    def query_edit(self, wd=None, **attributes):
+        return self._api_request('queryEdit', wd=wd, **attributes)
 
 
 class NodeWorxUsers(Users):
@@ -61,14 +69,8 @@ class NodeWorxUsers(Users):
         super().__init__(server)
         self.controller = '/nodeworx/users'
 
-    def _build_user_list(self, response):
-        users = []
-        for user in response:
-            users.append(NodeWorxUser({'email': user[0]}))
-        return users
-
     def add(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {
                 'nickname': str, 
                 'email': str,
@@ -82,11 +84,10 @@ class NodeWorxUsers(Users):
                 'encrypted': str,
                 'perms': list
             }}
-        if self._parse_fields(possible_fields, **attributes):
-             print(super().add(**attributes))
+        return self._api_request('add', fields=fields, **attributes)
 
     def edit(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {
                 'user': str
             },
@@ -100,23 +101,19 @@ class NodeWorxUsers(Users):
                 'password': str,
                 'confirm_password': str
             }}
-        if self._parse_fields(possible_fields, **attributes):
-             print(super().edit(**attributes))
+        return self._api_request('edit', fields=fields, **attributes)
 
     def list_deletable(self):
-        response = super().list_deletable()
-        return self._build_user_list(response)
+        return super().list_deletable()
 
     def list_editable(self):
-        response = super().list_editable()
-        return self._build_user_list(response)
+        return super().list_editable()
 
     def is_reseller(self):
-        return self._xmlrpc_query('isReseller')
+        return self._api_request('isReseller')
 
     def list_master_user(self):
-        response = self._xmlrpc_query('listMasterUser')
-        return NodeWorxUser(response)
+        return NodeWorxUser(self._api_request('listMasterUser'))
 
     def list_users(self):
         return super().list_users(NodeWorxUser)
@@ -129,14 +126,8 @@ class SiteWorxUsers(Users):
         super().__init__(server)
         self.controller = '/siteworx/users'
 
-    def _build_user_list(self, response):
-        users = []
-        for user in response:
-            users.append(SiteWorxUser({'email': user}))
-        return users
-
-    def add(self, working_domain, **attributes):
-        possible_fields = {
+    def add(self, wd, **attributes):
+        fields = {
             'required': {
                 'nickname': str, 
                 'email': str,
@@ -151,11 +142,10 @@ class SiteWorxUsers(Users):
                 'perms': list,
                 'locked_domains': str
             }}
-        if self._parse_fields(possible_fields, **attributes):
-             print(super().add(working_domain, **attributes))
+        return super().add(fields=fields, wd=wd, **attributes)
     
-    def edit(self, working_domain, **attributes):
-        possible_fields = {
+    def edit(self, wd, **attributes):
+        fields = {
             'required': {
                 'user': str, 
             },
@@ -169,22 +159,19 @@ class SiteWorxUsers(Users):
                 'menu_style': str,
                 'encrypted': str,
             }}
-        if self._parse_fields(possible_fields, **attributes):
-             print(super().edit(working_domain, **attributes))
+        return super().edit(fields=fields, wd=wd, **attributes)
 
-    def list_deletable(self, working_domain):
-        response = super().list_deletable(working_domain)
-        return self._build_user_list(response)
+    def list_deletable(self, wd):
+        return super().list_deletable(wd=wd)
 
-    def list_editable(self, working_domain):
-        response = super().list_editable(working_domain)
-        return self._build_user_list(response)
+    def list_editable(self, wd):
+        return super().list_editable(wd=wd)
 
-    def list_users(self, working_domain):
-        return super().list_users(SiteWorxUser, working_domain)
+    def list_users(self, wd):
+        return super().list_users(SiteWorxUser, wd=wd)
 
-    def list_working_user(self, working_domain):
-        return super().list_working_user(SiteWorxUser, working_domain)
+    def list_working_user(self, wd):
+        return super().list_working_user(SiteWorxUser, wd=wd)
 
 
 class User:

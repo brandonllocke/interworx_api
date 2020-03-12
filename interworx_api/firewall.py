@@ -6,7 +6,7 @@ class Firewall(Controller):
         self.controller = '/nodeworx/firewall'
 
     def add_port(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {
                 'port': str,
                 'tcp_flow_in': str,
@@ -18,30 +18,27 @@ class Firewall(Controller):
                 'cascade_to_nodes': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('addPort', **attributes)
+        return self._api_request('addPort', fields=fields, **attributes)
 
     def allow_deny_ips(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'trusted_ips': list,
                 'blocked_ips': list
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('allowDenyIps', **attributes)
+        return self._api_request('allowDenyIps', fields=fields, **attributes)
 
     def delete(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {'ports': list},
             'optional': {}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('delete', **attributes)
+        return self._api_request('delete', fields=fields, **attributes)
 
     def ipv6_settings(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'ip6tables_status': str,
@@ -49,24 +46,22 @@ class Firewall(Controller):
                 'cascade_to_nodes': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('ipv6Settings', **attributes)
+        return self._api_request('ipv6Settings', fields=fields, **attributes)
 
     def is_running(self):
-        return self._xmlrpc_query('isRunning')
+        return self._api_request('isRunning')
     
     def is_running_on_node(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {'node_id': str}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('isRunningOnNode', **attributes)
+        return self._api_request('isRunningOnNode', fields=fields, **attributes)
 
     def query_allow_deny_ips(self, **attributes):
         trusted_ips = []
         blocked_ips = []
-        response = self._xmlrpc_query('queryAllowDenyIps', **attributes)
+        response = self._api_request('queryAllowDenyIps', **attributes)
         for ip in response['trusted_ips']:
             trusted_ips.append(ip)
         for ip in response['blocked_ips']:
@@ -74,75 +69,68 @@ class Firewall(Controller):
         return trusted_ips, blocked_ips
 
     def query_ipv6_settings(self, **attributes):
-        return self._xmlrpc_query('queryIpv6Settings', **attributes)
+        return self._api_request('queryIpv6Settings', **attributes)
 
     def restart(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {'cascade_to_nodes': int}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('restart', **attributes)
+        return self._api_request('restart', fields=fields, **attributes)
 
     def restart_on_node(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {'node_id': str}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('restartOnNode', **attributes)
+        return self._api_request('restartOnNode', fields=fields, **attributes)
     
     def start(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {'cascade_to_nodes': int}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('start')
+        return self._api_request('start', fields=fields, **attributes)
 
     def start_on_boot(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'startonboot': int,
                 'cascade_to_nodes': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('startOnBoot', **attributes)
+        return self._api_request('startOnBoot', fields=fields, **attributes)
 
     def start_on_node(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'node_id': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('startOnNode', **attributes)
+        return self._api_request('startOnNode', fields=fields, **attributes)
 
     def stop(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'cascade_to_nodes': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('stop', **attributes)
+        return self._api_request('stop', fields=fields, **attributes)
 
     def stop_on_node(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'node_id': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('stopOnNode', **attributes)
+        return self._api_request('stopOnNode', fields=fields, **attributes)
     
     def update(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {
                 'ports': list
             },
@@ -153,11 +141,10 @@ class Firewall(Controller):
                 'udp_flow_out': str
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('update', **attributes)
+        return self._api_request('update', fields=fields, **attributes)
     
     def update_config(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'debug_mode': int,
@@ -174,5 +161,4 @@ class Firewall(Controller):
                 'cascade_to_nodes': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('updateConfig', **attributes)
+        return self._api_request('updateConfig', fields=fields, **attributes)

@@ -4,8 +4,8 @@ class Backups(Controller):
     def __init__(self, server):
         super().__init__(server)
 
-    def restore(self, working_domain=None, **attributes):
-        return self._xmlrpc_query('restore', **attributes)
+    def restore(self, fields=None, wd=None, **attributes):
+        return self._api_request('restore', fields=fields, wd=wd, **attributes)
 
 
 class NodeWorxBackups(Backups):
@@ -14,39 +14,36 @@ class NodeWorxBackups(Backups):
         self.controller = '/nodeworx/backup'
 
     def fullbackup(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {'domains': list},
             'optional': {'email': str}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('fullbackup', **attributes)
+        return self._api_request('fullbackup', fields=fields, **attributes)
 
     def query_accounts(self, **attributes):
         accounts = []
-        possible_fields = {
+        fields = {
             'required': {'reseller': str},
             'optional': {}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            response = self._xmlrpc_query('queryAccounts', **attributes)
-            for account in response:
-                accounts.append(AccountBackup(account))
+        response =  self._api_request('queryAccounts', fields=fields, **attributes)
+        for account in response:
+            accounts.append(AccountBackup(account))
         return accounts
 
     def query_backups(self, **attributes):
         backups = []
-        possible_fields = {
+        fields = {
             'required': {'domain': str},
             'optional': {}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            response = self._xmlrpc_query('queryBackups', **attributes)
-            for backup in response:
-                backups.append(Backup(backup))
+        response =  self._api_request('queryBackups', fields=fields, **attributes)
+        for backup in response:
+            backups.append(Backup(backup))
         return backups
 
     def restore(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {
                 'domain': str,
                 'file': str
@@ -55,16 +52,14 @@ class NodeWorxBackups(Backups):
                 'confirm_action': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return super().restore(**attributes)
+        return super().restore(fields=fields, **attributes)
 
     def structureonly(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {'domains': list},
             'optional': {'email': str}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('structureonly', **attributes)
+        return self._api_request('structureonly', fields=fields, **attributes)
 
 
 class SiteWorxBackups(Backups):
@@ -78,8 +73,8 @@ class SiteWorxBackups(Backups):
             backups.append(Backup(backup))
         return backups
 
-    def create(self, working_domain, **attributes):
-        possible_fields = {
+    def create(self, wd, **attributes):
+        fields = {
             'required': {
                 'type': str,
                 'location': str
@@ -91,44 +86,41 @@ class SiteWorxBackups(Backups):
             }
         }
         if attributes.get('type') == 'partial':
-            possible_fields['required']['options'] = str
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('create', working_domain, **attributes)
+            fields['required']['options'] = str
+        return self._api_request('create', fields=fields, wd=wd, **attributes)
 
-    def delete(self, working_domain, **attributes):
-        possible_fields = {
+    def delete(self, wd, **attributes):
+        fields = {
             'required': {'backups': list},
             'optional': {}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('delete', working_domain, **attributes)
+        return self._api_request('delete', fields=fields, wd=wd, **attributes)
 
-    def list_all_backups(self, working_domain, **attributes):
-        response = self._xmlrpc_query('listAllBackups', working_domain, **attributes)
+    def list_all_backups(self, wd, **attributes):
+        response = self._api_request('listAllBackups', wd=wd, **attributes)
         return self._organize_backups(response)
 
-    def list_daily_backups(self, working_domain, **attributes):
-        response = self._xmlrpc_query('listDailyBackups', working_domain, **attributes)
+    def list_daily_backups(self, wd, **attributes):
+        response = self._api_request('listDailyBackups', wd=wd, **attributes)
         return self._organize_backups(response)
 
-    def list_weekly_backups(self, working_domain, **attributes):
-        response = self._xmlrpc_query('listWeeklyBackups', working_domain, **attributes)
+    def list_weekly_backups(self, wd, **attributes):
+        response = self._api_request('listWeeklyBackups', wd=wd, **attributes)
         return self._organize_backups(response)
 
-    def list_monthly_backups(self, working_domain, **attributes):
-        response = self._xmlrpc_query('listMonthlyBackups', working_domain, **attributes)
+    def list_monthly_backups(self, wd, **attributes):
+        response = self._api_request('listMonthlyBackups', wd=wd, **attributes)
         return self._organize_backups(response)
 
-    def restore(self, working_domain, **attributes):
-        possible_fields = {
+    def restore(self, wd, **attributes):
+        fields = {
             'required': {
                 'filetype': str,
                 'file': str
             },
             'optional': {}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return super().restore(working_domain, **attributes)
+        return super().restore(fields=fields, wd=wd, **attributes)
 
 
 class Backup:

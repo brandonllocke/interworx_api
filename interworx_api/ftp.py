@@ -10,110 +10,102 @@ class NodeWorxFTP(FTP):
         self.controller = '/nodeworx/ftp'
 
     def auto_restart(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'ftp_autorestart': str,
                 'cascade_to_nodes': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-             return self._xmlrpc_query('autoRestart', **attributes)
+        return self._api_request('autoRestart', fields=fields, **attributes)
     
     def is_running(self):
-        return self._xmlrpc_query('isRunning')
+        return self._api_request('isRunning')
     
     def is_running_on_node(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'node_id': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-             return self._xmlrpc_query('isRunningOnNode', **attributes)
+        return self._api_request('isRunningOnNode', fields=fields, **attributes)
 
     def kill_sessions(self, **attributes):
-        possible_fields = {
-            'required': {},
-            'optional': {
-                'sessions': list
-            }
+        fields = {
+            'required': {'sessions': list},
+            'optional': {}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('killSessions', **attributes)
+        return self._api_request('killSessions', fields=fields, **attributes)
 
     def list_ftp_sessions(self):
-        return self._xmlrpc_query('listFtpSessions')
+        return self._api_request('listFtpSessions')
 
     def list_general_name(self):
-        return self._xmlrpc_query('listGeneralName')
+        return self._api_request('listGeneralName')
 
     def list_port_numbers(self):
-        return self._xmlrpc_query('listPortNumbers')
+        return self._api_request('listPortNumbers')
     
     def list_port_numbers_array(self):
-        return self._xmlrpc_query('listPortNumbersArray')
+        return self._api_request('listPortNumbersArray')
 
     def list_required_permissions(self):
-        return self._xmlrpc_query('listRequiredPermissions')
+        return self._api_request('listRequiredPermissions')
 
     def list_service_info(self):
-        return self._xmlrpc_query('listServiceInfo')
+        return self._api_request('listServiceInfo')
     
     def list_service_name(self):
-        return self._xmlrpc_query('listServicePage')
+        return self._api_request('listServicePage')
 
     def query_auto_restart(self):
-        response = self._xmlrpc_query('queryAutoRestart')
+        response = self._api_request('queryAutoRestart')
         if response['ftp_autorestart'] == 0:
             return True
         return False
 
     def query_edit_conf(self):
-        response = self._xmlrpc_query('queryEditConf')
+        response = self._api_request('queryEditConf')
         path = response['file']
         file_content = response['file_content']
         return path, file_content
 
     def query_server_options(self):
-        return self._xmlrpc_query('queryServerOptions')
+        return self._api_request('queryServerOptions')
 
     def query_sftp_options(self):
-        return self._xmlrpc_query('querySftpOptions')
+        return self._api_request('querySftpOptions')
 
     def restart(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'cascade_to_nodes': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('restart', **attributes)
+        return self._api_request('restart', fields=fields, **attributes)
     
     def restart_on_node(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'node_id': str
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('restartOnNode', **attributes)
+        return self._api_request('restartOnNode', fields=fields, **attributes)
 
     def rrd_graph(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'rrd': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('rrdGraph', **attributes)
+        return self._api_request('rrdGraph', fields=fields, **attributes)
     
     def server_options(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'maxinstances': int,
@@ -132,11 +124,10 @@ class NodeWorxFTP(FTP):
                 'cascade_to_nodes': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('serverOptions', **attributes)
+        return self._api_request('serverOptions', fields=fields, **attributes)
     
     def sftp_options(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'port': int,
@@ -145,59 +136,53 @@ class NodeWorxFTP(FTP):
                 'cascade_to_nodes': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('sftpOptions', **attributes)
+        return self._api_request('sftpOptions', fields=fields, **attributes)
 
     def start(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'cascade_to_nodes': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('start', **attributes)
+        return self._api_request('start', fields=fields, **attributes)
 
     def start_on_boot(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'ftp_startonboot': int,
                 'cascade_to_nodes': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('startOnBoot', **attributes)
+        return self._api_request('startOnBoot', fields=fields, **attributes)
     
     def start_on_node(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'node_id': str
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('startOnNode', **attributes)
+        return self._api_request('startOnNode', fields=fields, **attributes)
 
     def stop(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'cascade_to_nodes': int
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('stop', **attributes)
+        return self._api_request('stop', fields=fields, **attributes)
     
     def stop_on_node(self, **attributes):
-        possible_fields = {
+        fields = {
             'required': {},
             'optional': {
                 'node_id': str
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('stopOnNode', **attributes)
+        return self._api_request('stopOnNode', fields=fields, **attributes)
 
 
 class SiteWorxFTP(FTP):
@@ -205,8 +190,8 @@ class SiteWorxFTP(FTP):
         super().__init__(server)
         self.controller = '/siteworx/ftp'
 
-    def add(self, working_domain, **attributes):
-        possible_fields = {
+    def add(self, wd, **attributes):
+        fields = {
             'required': {
                 'user': str,
                 'password': str,
@@ -216,59 +201,55 @@ class SiteWorxFTP(FTP):
                 'homedir': str
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('add', working_domain, **attributes)
+        return self._api_request('add', fields=fields, wd=wd, **attributes)
 
-    def delete(self, working_domain, **attributes):
-        possible_fields = {
+    def delete(self, wd, **attributes):
+        fields = {
             'required': {'user': list},
             'optional': {}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('delete', working_domain, **attributes)
+        return self._api_request('delete', fields=fields, wd=wd, **attributes)
     
-    def edit(self, working_domain, **attributes):
-        possible_fields = {
-            'required': {'user': str},
+    def edit(self, wd, **attributes):
+        fields = {
+            'required': {
+                'user': str,
+                'homedir': str
+            },
             'optional': {
                 'password': str,
                 'confirm_password': str,
-                'homedir': str
             }
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('edit', working_domain, **attributes)
+        return self._api_request('edit', fields=fields, wd=wd, **attributes)
 
-    def list_ftp_accounts(self, working_domain, **attributes):
+    def list_ftp_accounts(self, wd, **attributes):
         accounts = []
-        response = self._xmlrpc_query('listFtpAccounts', working_domain, **attributes)
+        response = self._api_request('listFtpAccounts', wd=wd, **attributes)
         for account in response:
             accounts.append(FTPAccount(account))
         return accounts
 
-    def query_edit(self, working_domain, **attributes):
-        possible_fields = {
+    def query_edit(self, wd, **attributes):
+        fields = {
             'required': {'user': str},
             'optional': {}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('queryEdit', working_domain, **attributes)
+        return self._api_request('queryEdit', fields=fields, wd=wd, **attributes)
 
-    def suspend(self, working_domain, **attributes):
-        possible_fields = {
+    def suspend(self, wd, **attributes):
+        fields = {
             'required': {'user': list},
             'optional': {}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('suspend', working_domain, **attributes)
+        return self._api_request('suspend', fields=fields, wd=wd, **attributes)
     
-    def unsuspend(self, working_domain, **attributes):
-        possible_fields = {
+    def unsuspend(self, wd, **attributes):
+        fields = {
             'required': {'user': list},
             'optional': {}
         }
-        if self._parse_fields(possible_fields, **attributes):
-            return self._xmlrpc_query('unsuspend', working_domain, **attributes)
+        return self._api_request('unsuspend', fields=fields, wd=wd, **attributes)
 
 
 class FTPAccount:
