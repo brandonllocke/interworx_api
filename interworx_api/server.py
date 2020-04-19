@@ -14,6 +14,7 @@ from .ftp import SiteWorxFTP
 from .siteworx import SWAccounts
 from .cron import NodeWorxCron
 from .cron import SiteWorxCron
+from .http import Http
 
 class Server():
     def __init__(self, server_url, key):
@@ -48,6 +49,7 @@ class NodeWorx():
         self.ftp = NodeWorxFTP(server)
         self.siteworx = SWAccounts(server)
         self.cron = NodeWorxCron(server)
+        self.http = Http(server)
 
 
 class SiteWorx():

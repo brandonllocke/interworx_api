@@ -22,7 +22,6 @@ class Firewall(Controller):
 
     def allow_deny_ips(self, **attributes):
         fields = {
-            'required': {},
             'optional': {
                 'trusted_ips': list,
                 'blocked_ips': list
@@ -32,14 +31,12 @@ class Firewall(Controller):
 
     def delete(self, **attributes):
         fields = {
-            'required': {'ports': list},
-            'optional': {}
+            'required': {'ports': list}
         }
         return self._api_request('delete', fields=fields, **attributes)
 
     def ipv6_settings(self, **attributes):
         fields = {
-            'required': {},
             'optional': {
                 'ip6tables_status': str,
                 'icmp6_control': str,
@@ -53,7 +50,6 @@ class Firewall(Controller):
     
     def is_running_on_node(self, **attributes):
         fields = {
-            'required': {},
             'optional': {'node_id': str}
         }
         return self._api_request('isRunningOnNode', fields=fields, **attributes)
@@ -73,28 +69,24 @@ class Firewall(Controller):
 
     def restart(self, **attributes):
         fields = {
-            'required': {},
             'optional': {'cascade_to_nodes': int}
         }
         return self._api_request('restart', fields=fields, **attributes)
 
     def restart_on_node(self, **attributes):
         fields = {
-            'required': {},
             'optional': {'node_id': str}
         }
         return self._api_request('restartOnNode', fields=fields, **attributes)
     
     def start(self, **attributes):
         fields = {
-            'required': {},
             'optional': {'cascade_to_nodes': int}
         }
         return self._api_request('start', fields=fields, **attributes)
 
     def start_on_boot(self, **attributes):
         fields = {
-            'required': {},
             'optional': {
                 'startonboot': int,
                 'cascade_to_nodes': int
@@ -104,7 +96,6 @@ class Firewall(Controller):
 
     def start_on_node(self, **attributes):
         fields = {
-            'required': {},
             'optional': {
                 'node_id': int
             }
@@ -113,7 +104,6 @@ class Firewall(Controller):
 
     def stop(self, **attributes):
         fields = {
-            'required': {},
             'optional': {
                 'cascade_to_nodes': int
             }
@@ -122,7 +112,6 @@ class Firewall(Controller):
 
     def stop_on_node(self, **attributes):
         fields = {
-            'required': {},
             'optional': {
                 'node_id': int
             }
@@ -145,7 +134,6 @@ class Firewall(Controller):
     
     def update_config(self, **attributes):
         fields = {
-            'required': {},
             'optional': {
                 'debug_mode': int,
                 'defult_tos': int,

@@ -24,7 +24,6 @@ class NodeWorxBackups(Backups):
         accounts = []
         fields = {
             'required': {'reseller': str},
-            'optional': {}
         }
         response =  self._api_request('queryAccounts', fields=fields, **attributes)
         for account in response:
@@ -35,7 +34,6 @@ class NodeWorxBackups(Backups):
         backups = []
         fields = {
             'required': {'domain': str},
-            'optional': {}
         }
         response =  self._api_request('queryBackups', fields=fields, **attributes)
         for backup in response:
@@ -92,7 +90,6 @@ class SiteWorxBackups(Backups):
     def delete(self, wd, **attributes):
         fields = {
             'required': {'backups': list},
-            'optional': {}
         }
         return self._api_request('delete', fields=fields, wd=wd, **attributes)
 
@@ -118,7 +115,6 @@ class SiteWorxBackups(Backups):
                 'filetype': str,
                 'file': str
             },
-            'optional': {}
         }
         return super().restore(fields=fields, wd=wd, **attributes)
 

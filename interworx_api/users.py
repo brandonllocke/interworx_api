@@ -28,7 +28,6 @@ class Users(Controller):
             'required': {
                 'user': list
             },
-            'optional': {}
         }
         return self._api_request('deactivate', fields=fields, wd=wd, **attributes)
 
@@ -37,7 +36,6 @@ class Users(Controller):
             'required': {
                 'user': list
             },
-            'optional': {}
         }
         return self._api_request('delete', fields=fields, wd=wd, **attributes)
 

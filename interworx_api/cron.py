@@ -53,8 +53,7 @@ class NodeWorxCron(Cron):
             'required': {
                 'user': str,
                 'jobs': list
-            },
-            'optional': {}
+            }
         }
         return super().delete(fields=fields, **attributes)
 
@@ -95,8 +94,7 @@ class NodeWorxCron(Cron):
             'required': {
                 'user': str,
                 'job': int
-            },
-            'optional': {}
+            }
         }
         job = super().query_edit(fields=fields, **attributes)
         return CronQueryEdit(job)
@@ -104,8 +102,7 @@ class NodeWorxCron(Cron):
     def query_jobs(self, **attributes):
         parsed_jobs = []
         fields = {
-            'required': {'user': str},
-            'optional': {}
+            'required': {'user': str}
         }
         jobs = super().query_jobs(fields=fields, **attributes)
         print(jobs)
@@ -115,8 +112,7 @@ class NodeWorxCron(Cron):
     
     def query_options(self, **attributes):
         fields = {
-            'required': {'user': str},
-            'optional': {}
+            'required': {'user': str}
         }
         options = self._api_request('queryOptions', fields=fields, **attributes)
         return CronOptions(options)
@@ -142,8 +138,7 @@ class SiteWorxCron(Cron):
 
     def delete(self, wd, **attributes):
         fields = {
-            'required': {'jobs': list},
-            'optional': {}
+            'required': {'jobs': list}
         }
         return super().delete(fields=fields, wd=wd, **attributes)
 
@@ -178,8 +173,7 @@ class SiteWorxCron(Cron):
         fields = {
             'required': {
                 'job': int
-            },
-            'optional': {}
+            }
         }
         job = super().query_edit(fields=fields, wd=wd, **attributes)
         return CronQueryEdit(job)
