@@ -13,6 +13,7 @@ from .ftp import NodeWorxFTP
 from .ftp import SiteWorxFTP
 from .siteworx import SWAccounts
 from .cron import NodeWorxCron
+from .cron import SiteWorxCron
 
 class Server():
     def __init__(self, server_url, key):
@@ -56,6 +57,7 @@ class SiteWorx():
         self.users = SiteWorxUsers(server)
         self.backup = SiteWorxBackups(server)
         self.ftp = SiteWorxFTP(server)
+        self.cron = SiteWorxCron(server)
 
 
 class ValidationError(Exception):
