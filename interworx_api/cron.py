@@ -99,7 +99,7 @@ class NodeWorxCron(Cron):
             'optional': {}
         }
         job = super().query_edit(fields=fields, **attributes)
-        return NodeWorxCronQueryEdit(job)
+        return CronQueryEdit(job)
 
     def query_jobs(self, **attributes):
         parsed_jobs = []
@@ -181,8 +181,8 @@ class SiteWorxCron(Cron):
             },
             'optional': {}
         }
-        job = self._api_request('queryEdit', fields=fields, **attributes)
-        return NodeWorxCronQueryEdit(job)
+        job = super().query_edit(fields=fields, wd=wd, **attributes)
+        return CronQueryEdit(job)
 
     def query_jobs(self, wd, **attributes):
         parsed_jobs = []
@@ -195,6 +195,11 @@ class SiteWorxCron(Cron):
         options = self._api_request('queryOptions', wd=wd)
         return CronOptions(options[0])
 
+class CronOptions:
+    def __init__(self, info):
+        self.shell = info.get('shell')
+        self.path = info.get('path')
+        self.mailto = info.get('mailto')
     
 class NodeWorxCronJob:
     def __init__(self, info):
@@ -219,14 +224,8 @@ class NodeWorxCronJob:
                    self.month, self.dayofweek, self.script]
         return ' '.join(crontab)
 
-class CronOptions:
-    def __init__(self, info):
-        self.shell = info.get('shell')
-        self.path = info.get('path')
-        self.mailto = info.get('mailto')
 
-
-class NodeWorxCronQueryEdit:
+class CronQueryEdit:
     def __init__(self, info):
         self.systemtime = info.get('systemtime')
         self.enabled = info.get('enabled')
@@ -236,7 +235,7 @@ class NodeWorxCronQueryEdit:
         self.month = info.get('month')
         self.dayofweek = info.get('dayofweek')
         self.script = info.get('script')
-        self.user = info.get('user')
+        self.user = info.get('user', '')
         self.job = info.get('job')
 
     def __str__(self):
