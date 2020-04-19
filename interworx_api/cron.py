@@ -118,7 +118,7 @@ class NodeWorxCron(Cron):
             'required': {'user': str},
             'optional': {}
         }
-        options = self._api_request('queryOptions', fields=fields, wd=wd, **attributes)
+        options = self._api_request('queryOptions', fields=fields, **attributes)
         return CronOptions(options)
 
 
