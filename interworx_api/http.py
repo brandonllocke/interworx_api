@@ -76,11 +76,7 @@ class Http(Controller):
         return self._api_request('listGeneralName')
 
     def list_modules(self):
-        parsed_modules = []
-        modules = self._api_request('listModules')
-        for module in modules:
-            parsed_modules.append(Module(module))
-        return parsed_modules
+        return self._api_request('listModules')
 
     def list_php_install_mode(self):
         return self._api_request('listPhpInstallMode')
@@ -119,16 +115,13 @@ class Http(Controller):
         return bool(self._api_request('queryAutoRestart')['apache_autorestart'])
 
     def query_edit_conf(self):
-        conf = self._api_request('queryEditConf')
-        return QueryEdit(conf)
+        return self._api_request('queryEditConf')
 
     def query_multiple_php_options(self):
-        options = self._api_request('queryMultiplePhpOptions')
-        return MultiplePhpOptions(options)
+        return self._api_request('queryMultiplePhpOptions')
 
     def query_update_php_mode(self):
-        options = self._api_request('queryUpdatePhpMode')
-        return PhpModeOptions(options)
+        return self._api_request('queryUpdatePhpMode')
 
     def refresh_available_php_versions(self):
         self._api_request('refreshAvailablePhpVersions')
@@ -156,34 +149,44 @@ class Http(Controller):
         fields = {'optional': {'cascade_to_nodes': int}}
         return self._api_request('restartPhpFpm', fields=fields, **attributes)
 
-class Module:
-    def __init__(self, info):
-        self.name = info.get('name')
-        self.enabled = bool(info.get('enabled'))
+    def start(self, **attributes):
+        fields = {'optional': {'cascade_to_nodes': int}}
+        return self._api_request('start', fields=fields, **attributes)
 
-    def __str__(self):
-        return self.name
-    
-    def __repr__(self):
-        return self.name
+    def start_on_boot(self, **attributes):
+        fields = {'optional': {
+            'startonboot': int,
+            'cascade_to_nodes': int
+            }
+        }
+        return self._api_request('startOnBoot', fields=fields, **attributes)
 
-class QueryEdit:
-    def __init__(self, info):
-        self.file = info.get('file')
-        self.file_content = info.get('file_content')
+    def start_on_node(self, **attributes):
+        fields = {'optional': {'node_id': str}}
+        return self._api_request('startOnNode', fields=fields, **attributes)
 
-    def __str__(self):
-        return self.file
+    def stop(self, **attributes):
+        fields = {'optional': {'cascade_to_nodes': int}}
+        return self._api_request('stop', fields=fields, **attributes)
 
-    def __repr__(self):
-        return self.file
+    def stop_on_node(self, **attributes):
+        fields = {'optional': {'node_id': str}}
+        return self._api_request('stopOnNode', fields=fields, **attributes)
 
-class MultiplePhpOptions:
-    def __init__(self, info):
-        self.enabled_php_versions = info.get('enabled_php_versions')
-        self.default_php_version = info.get('default_php_version')
+    def sync_all_config_files(self):
+        return self._api_request('syncAllConfigFiles')
 
-class PhpModeOptions:
-    def __init__(self, info):
-        self.version = info.get('version')
-        self.php_mode = info.get('php_mode')
+    def sync_config_files(self, **attributes):
+        fields = {'required': {'domain': str}}
+        return self._api_request('syncConfigFiles', fields=fields, **attributes)
+
+    def sync_redirects(self):
+        return self._api_request('syncRedirects')
+
+    def update_php_mode(self, **attributes):
+        fields = {'optional': {'php_mode': str}}
+        return self._api_request('updatePhpMode', fields=fields, **attributes)
+
+    def update_rrd(self, **attributes):
+        fields = {'optional': {'updateRrd': int}}
+        return self._api_request('updateRrd', fields=fields, **attributes)

@@ -4,18 +4,6 @@ class Users(Controller):
     def __init__(self, server):
         super().__init__(server)
     
-    def _build_user_list(self, response, classname):
-        users = []
-        for user in response:
-            users.append(classname(user))
-        return users
-
-    def _build_email_list(self, response):
-        users = []
-        for user in response:
-            users.append(user[0])
-        return users
-
     def add(self, fields=None, wd=None, **attributes):
         return self._api_request('add', fields=fields, wd=wd, **attributes)
 
@@ -43,23 +31,19 @@ class Users(Controller):
         return self._api_request('edit', fields=fields, wd=wd, **attributes)
 
     def list_deletable(self, wd=None):
-        response = self._api_request('listDeletable', wd=wd)
-        return self._build_email_list(response)
+        return self._api_request('listDeletable', wd=wd)
 
     def list_editable(self, wd=None):
-        response = self._api_request('listEditable', wd=wd)
-        return self._build_email_list(response)
+        return self._api_request('listEditable', wd=wd)
 
     def list_users(self, classname, wd=None):
-        response = self._api_request('listUsers', wd=wd)
-        return self._build_user_list(response, classname)
+        return self._api_request('listUsers', wd=wd)
 
-    def list_working_user(self, classname, wd=None):
-        response = self._api_request('listWorkingUser', wd=wd)
-        return classname(response)
+    def list_working_user(self, wd=None):
+        return self._api_request('listWorkingUser', wd=wd)
 
-    def query_edit(self, wd=None, **attributes):
-        return self._api_request('queryEdit', wd=wd, **attributes)
+    def query_edit(self, wd=None):
+        return self._api_request('queryEdit', wd=wd)
 
 
 class NodeWorxUsers(Users):
@@ -111,13 +95,13 @@ class NodeWorxUsers(Users):
         return self._api_request('isReseller')
 
     def list_master_user(self):
-        return NodeWorxUser(self._api_request('listMasterUser'))
+        return self._api_request('listMasterUser')
 
     def list_users(self):
-        return super().list_users(NodeWorxUser)
+        return super().list_users()
 
     def list_working_user(self):
-        return super().list_working_user(NodeWorxUser)
+        return super().list_working_user()
 
 class SiteWorxUsers(Users):
     def __init__(self, server):
@@ -166,34 +150,7 @@ class SiteWorxUsers(Users):
         return super().list_editable(wd=wd)
 
     def list_users(self, wd):
-        return super().list_users(SiteWorxUser, wd=wd)
+        return super().list_users(wd=wd)
 
     def list_working_user(self, wd):
-        return super().list_working_user(SiteWorxUser, wd=wd)
-
-
-class User:
-    def __init__(self, info):
-        self.global_uid = info.get('global_uid', None)
-        self.email = info.get('email', None)
-        self.nickname = info.get('nickname', None)
-        self.language = info.get('language', None)
-        self.user_status = info.get('user_status', None)
-        self.type = info.get('type', None)
-
-    def __str__(self):
-        return self.email
-
-    def __repr__(self):
-        return self.email
-
-
-class NodeWorxUser(User):
-    pass
-
-
-class SiteWorxUser(User):
-    def __init__(self, info):
-        super().__init__(info)
-        self.ssh_enabled = info.get('ssh_enabled', None)
-        self.ssh_username = info.get('ssh_username', None)
+        return super().list_working_user(wd=wd)

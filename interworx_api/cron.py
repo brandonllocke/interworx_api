@@ -96,26 +96,15 @@ class NodeWorxCron(Cron):
                 'job': int
             }
         }
-        job = super().query_edit(fields=fields, **attributes)
-        return CronQueryEdit(job)
+        return super().query_edit(fields=fields, **attributes)
 
     def query_jobs(self, **attributes):
-        parsed_jobs = []
-        fields = {
-            'required': {'user': str}
-        }
-        jobs = super().query_jobs(fields=fields, **attributes)
-        print(jobs)
-        for job in jobs:
-            parsed_jobs.append(NodeWorxCronJob(job))
-        return parsed_jobs
+        fields = {'required': {'user': str}}
+        return super().query_jobs(fields=fields, **attributes)
     
     def query_options(self, **attributes):
-        fields = {
-            'required': {'user': str}
-        }
-        options = self._api_request('queryOptions', fields=fields, **attributes)
-        return CronOptions(options)
+        fields = {'required': {'user': str}}
+        return self._api_request('queryOptions', fields=fields, **attributes)
 
 
 class SiteWorxCron(Cron):
@@ -175,84 +164,10 @@ class SiteWorxCron(Cron):
                 'job': int
             }
         }
-        job = super().query_edit(fields=fields, wd=wd, **attributes)
-        return CronQueryEdit(job)
+        return super().query_edit(fields=fields, wd=wd, **attributes)
 
-    def query_jobs(self, wd, **attributes):
-        parsed_jobs = []
-        jobs = super().query_jobs(wd=wd, **attributes)
-        for job in jobs:
-            parsed_jobs.append(SiteWorxCronJob(job))
-        return parsed_jobs
+    def query_jobs(self, wd):
+        return super().query_jobs(wd=wd)
 
     def query_options(self, wd):
-        options = self._api_request('queryOptions', wd=wd)
-        return CronOptions(options[0])
-
-class CronOptions:
-    def __init__(self, info):
-        self.shell = info.get('shell')
-        self.path = info.get('path')
-        self.mailto = info.get('mailto')
-    
-class NodeWorxCronJob:
-    def __init__(self, info):
-       self.user = info.get('user') 
-       self.number = info.get('linenum')
-       self.status = info.get('status')
-       self.minute = info.get('minute')
-       self.hour = info.get('hour')
-       self.day = info.get('day')
-       self.month = info.get('month')
-       self.dayofweek = info.get('dayofweek')
-       self.script = info.get('script')
-
-    def __str__(self):
-        return self.script
-
-    def __repr__(self):
-        return self.script
-
-    def print_like_crontab(self):
-        crontab = [self.minute, self.hour, self.day,
-                   self.month, self.dayofweek, self.script]
-        return ' '.join(crontab)
-
-
-class CronQueryEdit:
-    def __init__(self, info):
-        self.systemtime = info.get('systemtime')
-        self.enabled = info.get('enabled')
-        self.minute = info.get('minute')
-        self.hour = info.get('minute')
-        self.day = info.get('day')
-        self.month = info.get('month')
-        self.dayofweek = info.get('dayofweek')
-        self.script = info.get('script')
-        self.user = info.get('user', '')
-        self.job = info.get('job')
-
-    def __str__(self):
-        return self.script
-    
-    def __repr__(self):
-        return self.script
-
-
-class SiteWorxCronJob:
-    def __init__(self, info):
-        self.number = info.get('linenum')
-        self.type = info.get('type')
-        self.enabled = info.get('enabled')
-        self.minute = info.get('minute')
-        self.hour = info.get('hour')
-        self.day = info.get('day')
-        self.month = info.get('month')
-        self.dayofweek = info.get('dayofweek')
-        self.script = info.get('script')
-
-    def __str__(self):
-        return self.script
-
-    def __repr__(self):
-        return self.script
+        return self._api_request('queryOptions', wd=wd)

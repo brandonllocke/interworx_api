@@ -224,11 +224,7 @@ class SiteWorxFTP(FTP):
         return self._api_request('edit', fields=fields, wd=wd, **attributes)
 
     def list_ftp_accounts(self, wd, **attributes):
-        accounts = []
-        response = self._api_request('listFtpAccounts', wd=wd, **attributes)
-        for account in response:
-            accounts.append(FTPAccount(account))
-        return accounts
+        return self._api_request('listFtpAccounts', wd=wd, **attributes)
 
     def query_edit(self, wd, **attributes):
         fields = {
@@ -250,18 +246,3 @@ class SiteWorxFTP(FTP):
             'optional': {}
         }
         return self._api_request('unsuspend', fields=fields, wd=wd, **attributes)
-
-
-class FTPAccount:
-    def __init__(self, info):
-        self.username = info.get('username')
-        self.homedir = info.get('homedir')
-        self.login_count = info.get('login_count')
-        self.fulluser = info.get('fulluser')
-        self.status = info.get('status')
-
-    def __str__(self):
-        return self.username
-
-    def __repr__(self):
-        return self.username
