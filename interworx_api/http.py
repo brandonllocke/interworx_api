@@ -148,6 +148,14 @@ class Http(Controller):
         }
         return self._api_request('restart', fields=fields, **attributes)
 
+    def restart_on_node(self, **attributes):
+        fields = {'optional': {'node_id': str}}
+        return self._api_request('restartOnNode', fields=fields, **attributes)
+
+    def restart_php_fpm(self, **attributes):
+        fields = {'optional': {'cascade_to_nodes': int}}
+        return self._api_request('restartPhpFpm', fields=fields, **attributes)
+
 class Module:
     def __init__(self, info):
         self.name = info.get('name')
