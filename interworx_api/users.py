@@ -52,6 +52,22 @@ class NodeWorxUsers(Users):
         self.controller = '/nodeworx/users'
 
     def add(self, **attributes):
+        """Adds a NodeWorx User to the server.
+
+        Args:
+           nickname (str): the user's nickname
+           email (str): the user's email address
+           password(str): the user's password
+           confirm_password (str): the user's password again
+           language (str): the two letter representation for a language (en-us, de, es) (default is en-us)
+           theme (str): name of the theme for the user (default is calliope)
+           menu_style (str): the menu style for this user (default is big)
+           encrypted (str): (y/n) whether the user's password is encrypted or not
+           perms (str/list): what permissions a user should have (default is ["LOGIN"])
+
+        Returns:
+           str: NodeWorx user successfully added
+        """
         fields = {
             'required': {
                 'nickname': str, 
