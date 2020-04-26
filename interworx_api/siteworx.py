@@ -187,9 +187,6 @@ class SWAccounts(Controller):
         """
         return self._xmlrpc_query("deleteConfig", master_domain=master_domain, **kwargs)
 
-    ############################
-    #### DO ME
-    ############################
 
     def edit(self, *, domain, **kwargs):
         """Edit a SiteWorx account.
