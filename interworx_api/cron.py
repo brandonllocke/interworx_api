@@ -1,30 +1,5 @@
 from .controller import Controller
 
-class Cron(Controller):
-    def __init__(self, server):
-        super().__init__(server)
-
-    def add(self, fields=None, wd=None, **kwargs):
-        return self._api_request('add', fields=fields, wd=wd, **kwargs)
-
-    def delete(self, fields=None, wd=None, **kwargs):
-        return self._api_request('delete', fields=fields, wd=wd, **kwargs)
-
-    def edit(self, fields=None, wd=None, **kwargs):
-        return self._api_request('edit', fields=fields, wd=wd, **kwargs)
-    
-    def get_current_system_time(self):
-        return self._api_request('getCurrentSystemTime')
-
-    def options(self, fields=None, wd=None, **kwargs):
-        return self._api_request('options', fields=fields, wd=wd, **kwargs)
-
-    def query_edit(self, fields=None, wd=None, **kwargs):
-        return self._api_request('queryEdit', fields=fields, wd=wd, **kwargs)
-
-    def query_jobs(self, fields=None, wd=None, **kwargs):
-        return self._api_request('queryJobs', fields=fields, wd=wd, **kwargs)
-
 
 class NodeWorxCron(Controller):
     def __init__(self, server):
@@ -209,6 +184,7 @@ class SiteWorxCron(Cron):
         """ Manage options for cron users.
 
         Args:
+            wd (str): (required) the working directory for the account
             user (str): (required) the user to manage options for
             shell (str): the shell to run the crontab on
             path (str/list): the directories that will be in the search path for cron
@@ -219,17 +195,37 @@ class SiteWorxCron(Cron):
         """
         return self._xmlrpc_query('options', wd=wd, user=user, **kwargs)
     
-    def query_edit(self, wd, **kwargs):
-        parsed_jobs = []
-        fields = {
-            'required': {
-                'job': int
-            }
-        }
-        return super().query_edit(fields=fields, wd=wd, **kwargs)
+    def query_edit(self, *, wd, job):
+        """ Displays the information available to the action "edit".
 
-    def query_jobs(self, wd):
-        return super().query_jobs(wd=wd)
+        Args:
+            wd (str): (required) the working directory for the account
+            job (int): (required) the linenumber/job number of the cronjob to edit
+
+        Returns:
+            dict: a dictionary of editable fields for the job
+        """
+        parsed_jobs = []
+        return self._xmlrpc_query('queryEdit', wd=wd, job=job)
+
+    def query_jobs(self, *, wd):
+        """ List user jobs.
+
+        Args:
+            wd (str): (required) the working directory for the account
+
+        Returns:
+            list: a list of dictionaries containing job information
+        """
+        return self._xmlrpc_query('queryJobs', wd=wd)
 
     def query_options(self, wd):
-        return self._api_request('queryOptions', wd=wd)
+        """ Display the information available to the action "options".
+
+        Args:
+            wd (str): (required) the working directory for the account
+
+        Returns:
+            list: a list of dictionaries containing option information
+        """
+        return self._xmlrpc_query('queryOptions', wd=wd)

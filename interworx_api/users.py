@@ -172,7 +172,7 @@ class SiteWorxUsers(Controller):
         super().__init__(server)
         self.controller = "/siteworx/users"
 
-    def activate(self, *, wd=None, user):
+    def activate(self, *, wd, user):
         """Activates a SiteWorx user.
 
         Args:
@@ -219,7 +219,7 @@ class SiteWorxUsers(Controller):
             **kwargs
         )
 
-    def deactivate(self, *, wd=None, user):
+    def deactivate(self, *, wd, user):
         """Deactivates (but does not delete) a SiteWorx user.
 
         Args:
@@ -231,7 +231,7 @@ class SiteWorxUsers(Controller):
         """
         return self._xmlrpc_query("deactivate", wd=wd, user=user)
 
-    def delete(self, *, wd=None, user):
+    def delete(self, *, wd, user):
         """Delete a SiteWorx user.
 
         Args:
@@ -309,7 +309,7 @@ class SiteWorxUsers(Controller):
         """
         return self._xmlrpc_query("listWorkingUser", wd=wd)
 
-    def query_edit(self, wd=None):
+    def query_edit(self, *, wd):
         """Displays the information available to the action "edit".
 
         Args:
