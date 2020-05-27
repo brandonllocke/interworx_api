@@ -6,7 +6,7 @@ class Firewall(Controller):
         self.controller = '/nodeworx/firewall'
 
     def add_port(self, *, port, tcp_flow_in, tcp_flow_out, udp_flow_in,
-                 upd_flow_out, **kwargs):
+                 udp_flow_out, **kwargs):
         """ Add a port to the firewall configuration.
 
         Args:
@@ -203,7 +203,7 @@ class Firewall(Controller):
         """ Restart the firewall service.
 
         Args:
-            cascasde_to_nodes (int): (1) replay on nodes?
+            cascade_to_nodes (int): (1) replay on nodes?
 
         Returns:
             str: generic success message
