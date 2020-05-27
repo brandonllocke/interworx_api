@@ -199,86 +199,37 @@ class Firewall(Controller):
         """
         return self._xmlrpc_query('queryIpv6Settings')
 
-    def restart(self, **kwargs):
-        fields = {
-            'optional': {'cascade_to_nodes': int}
-        }
-        return self._api_request('restart', fields=fields, **kwargs)
+    def restart(self, *, **kwargs):
+        """ Restart the firewall service.
 
-    def restart_on_node(self, **kwargs):
-        fields = {
-            'optional': {'node_id': str}
-        }
-        return self._api_request('restartOnNode', fields=fields, **kwargs)
+        Args:
+            cascasde_to_nodes (int): (1) replay on nodes?
+
+        Returns:
+            str: generic success message
+        """
+        return self._xmlrpc_query('restart', **kwargs)
+
+    def restart_on_node(self, *, **kwargs):
+        return self._xmlrpc_query('restartOnNode', **kwargs)
     
-    def start(self, **kwargs):
-        fields = {
-            'optional': {'cascade_to_nodes': int}
-        }
-        return self._api_request('start', fields=fields, **kwargs)
+    def start(self, *, **kwargs):
+        return self._xmlrpc_query('start', **kwargs)
 
-    def start_on_boot(self, **kwargs):
-        fields = {
-            'optional': {
-                'startonboot': int,
-                'cascade_to_nodes': int
-            }
-        }
-        return self._api_request('startOnBoot', fields=fields, **kwargs)
+    def start_on_boot(self, *, **kwargs):
+        return self._xmlrpc_query('startOnBoot', **kwargs)
 
-    def start_on_node(self, **kwargs):
-        fields = {
-            'optional': {
-                'node_id': int
-            }
-        }
-        return self._api_request('startOnNode', fields=fields, **kwargs)
+    def start_on_node(self, *, **kwargs):
+        return self._xmlrpc_query('startOnNode', **kwargs)
 
-    def stop(self, **kwargs):
-        fields = {
-            'optional': {
-                'cascade_to_nodes': int
-            }
-        }
-        return self._api_request('stop', fields=fields, **kwargs)
+    def stop(self, *, **kwargs):
+        return self._xmlrpc_query('stop', **kwargs)
 
-    def stop_on_node(self, **kwargs):
-        fields = {
-            'optional': {
-                'node_id': int
-            }
-        }
-        return self._api_request('stopOnNode', fields=fields, **kwargs)
+    def stop_on_node(self, *, **kwargs):
+        return self._xmlrpc_query('stopOnNode', **kwargs)
     
-    def update(self, **kwargs):
-        fields = {
-            'required': {
-                'ports': list
-            },
-            'optional': {
-                'tcp_flow_in': str,
-                'tcp_flow_out': str,
-                'udp_flow_in': str,
-                'udp_flow_out': str
-            }
-        }
-        return self._api_request('update', fields=fields, **kwargs)
+    def update(self, *, ports, **kwargs):
+        return self._xmlrpc_query('update', ports=ports, **kwargs)
     
-    def update_config(self, **kwargs):
-        fields = {
-            'optional': {
-                'debug_mode': int,
-                'defult_tos': int,
-                'tcp_drop_policy': str,
-                'udp_drop_policy': str,
-                'block_multicast': int,
-                'block_private_network': int,
-                'set_egress_filter': int,
-                'max_sessions': int,
-                'sysctl_tcp': int,
-                'if': str,
-                'tifs': str,
-                'cascade_to_nodes': int
-            }
-        }
-        return self._api_request('updateConfig', fields=fields, **kwargs)
+    def update_config(self, *, **kwargs):
+        return self._xmlrpc_query('updateConfig', **kwargs)

@@ -5,188 +5,157 @@ class Http(Controller):
         super().__init__(server)
         self.controller = '/nodeworx/http'
 
-    def _edit_module(self, action=None, **kwargs):
-        fields = {
-            'required': {},
-            'optional': {
-                'name': list,
-            }
-        }
-        return self._api_request(action, fields=fields, **kwargs)
+    def apache_update(self, *, **kwargs):
+        """ Update common apache web server settings.
 
-    def apache_update(self, **kwargs):
-        fields = {
-            'required': {},
-            'optional': {
-                'http_port': int,
-                'https_port': int,
-                'serverlimit': int,
-                'maxclients': int,
-                'startservers': int,
-                'minspareservers': int,
-                'maxspareservers': int,
-                'maxrequestsperchild': int,
-                'timeout': int,
-                'keepalive': int,
-                'maxkeepaliverequests': int,
-                'keepalivetimeout': int,
-                'adddefaultcharset': str,
-                'force_graceful': int,
-                'cascade_to_nodes': int
-            }
-        }
-        return self._api_request('apacheUpdate', fields=fields, **kwargs)
+        Args:
+            http_port (int): the port for http use
+            https_port (int): the port for https use
+            serverlimit (int): sets the maximum configured value for
+                MaxClients for the lifetime of the web server process.
+            maxclients (int): sets the limit on the number of simultaneous
+                requests that will be served.
+            startservers (int): sets the number of child server processes
+                created on startup. As the number of processes is dynamically
+                controlled depending on the load, there is usually little
+                reason to adjust this parameter.
+            minspareserver (int): Minimum number of idle threads to handle
+                request spikes.
+            maxspareservers (int): monitors the number of idle threads on a
+                per-child basis. If there are too many idle threads in that
+                child, the server will begin to kill threads within that
+                child.
+            maxrequestperchild (int): sets the limit on the number of
+                requests that an individual child server process will handle.
+            timeout (int): the length of time before the web server kills the
+                thread handling your connection.
+            keepalive (int): Turn Keepalive on or off.
+            maxkeepaliverequests (int): The Keep-Alive extension to HTTP/1.0
+                and the persistent connection feature of HTTP/1.1 provide
+                long-lived HTTP sessions which allow multiple requests to be
+                sent over the same TCP connection.
+            keepalivetimeout (int): he number of seconds the web server will
+                wait for a subsequent request before closing the connection.
+                Once a request has been received, the timeout value specified
+                by the timeout directive applies.
+            adddefaultcharset (str): Default value for the media type charset
+                parameter (the name of a character encoding) to be added to a
+                response if and only if the response’s content-type is either
+                text/plain or text/html.
+            force_graceful (int): force restart of apache upon change?
+            cascade_to_nodes (int): Selecting this option causes the action
+                to be replayed on all nodes of the cluster automatically, as
+                if you had logged in to each node manually
+        
+        Returns:
+            str: generic success message
+        """
+        return self._xmlrpc_query('apacheUpdate', **kwargs)
     
-    def auto_restart(self, **kwargs):
-        fields = {
-            'required': {},
-            'optional': {
-                'apache_autorestart': int,
-                'cascade_to_nodes': int,
-            }
-        }
-        return self._api_request('autoRestart', fields=fields, **kwargs)
-
-    def disable(self, **kwargs):
-        return self._edit_modules(action='disable', **kwargs)
-
-    def enabled(self, **kwargs):
-        return self._edit_modules(action='enable', **kwargs)
+    def auto_restart(self, *, **kwargs):
+        return self._xmlrpc_query('autoRestart', **kwargs)
 
     def enable_multiple_php(self):
-        return self._api_request('enableMultiplePhp')
+        return self._xmlrpc_query('enableMultiplePhp')
 
     def is_running(self):
-        return self._api_request('isRunning')
+        return self._xmlrpc_query('isRunning')
 
-    def is_running_on_node(self, **kwargs):
-        fields = {
-            'required': {},
-            'optional': {'node_id': str}
-        }
-        return self._api_request('isRunningOnNode', fields=fields, **kwargs)
+    def is_running_on_node(self, *, **kwargs):
+        return self._xmlrpc_query('isRunningOnNode', **kwargs)
 
     def list_available_php_versions(self):
-        return self._api_request('listAvailablePhpVersions')
+        return self._xmlrpc_query('listAvailablePhpVersions')
 
     def list_enabled_php_versions(self):
-        return self._api_request('listEnabledPhpVersions')
+        return self._xmlrpc_query('listEnabledPhpVersions')
 
     def list_general_name(self):
-        return self._api_request('listGeneralName')
+        return self._xmlrpc_query('listGeneralName')
 
     def list_modules(self):
-        return self._api_request('listModules')
+        return self._xmlrpc_query('listModules')
 
     def list_php_install_mode(self):
-        return self._api_request('listPhpInstallMode')
+        return self._xmlrpc_query('listPhpInstallMode')
 
     def list_port_numbers(self):
-        return self._api_request('listPortNumbers')
+        return self._xmlrpc_query('listPortNumbers')
     
     def list_port_numbers_array(self):
-        return self._api_request('listPortNumbersArray')
+        return self._xmlrpc_query('listPortNumbersArray')
 
     def list_required_permissions(self):
-        return self._api_request('listRequiredPermissions')
+        return self._xmlrpc_query('listRequiredPermissions')
 
     def list_service_info(self):
-        return self._api_request('listServiceInfo')
+        return self._xmlrpc_query('listServiceInfo')
 
     def list_service_name(self):
-        return self._api_request('listServiceName')
+        return self._xmlrpc_query('listServiceName')
 
     def list_service_page(self):
-        return self._api_request('listServicePage')
+        return self._xmlrpc_query('listServicePage')
 
-    def multiple_php_options(self, **kwargs):
-        fields = {
-            'optional': {
-                'enabled_php_versions': list,
-                'default_php_version': str
-            }
-        }
-        return self._api_request('multiplePhpOptions', fields=fields, **kwargs)
+    def multiple_php_options(self, *, **kwargs):
+        return self._xmlrpc_query('multiplePhpOptions', **kwargs)
 
     def query_apache_update(self):
-        return self._api_request('queryApacheUpdate')
+        return self._xmlrpc_query('queryApacheUpdate')
 
     def query_auto_restart(self):
-        return bool(self._api_request('queryAutoRestart')['apache_autorestart'])
+        return bool(self._xmlrpc_query('queryAutoRestart')['apache_autorestart'])
 
     def query_edit_conf(self):
-        return self._api_request('queryEditConf')
+        return self._xmlrpc_query('queryEditConf')
 
     def query_multiple_php_options(self):
-        return self._api_request('queryMultiplePhpOptions')
+        return self._xmlrpc_query('queryMultiplePhpOptions')
 
     def query_update_php_mode(self):
-        return self._api_request('queryUpdatePhpMode')
+        return self._xmlrpc_query('queryUpdatePhpMode')
 
     def refresh_available_php_versions(self):
-        self._api_request('refreshAvailablePhpVersions')
-
-    def remove(self, **kwargs):
-        return self._edit_modules(action='remove', **kwargs)
+        self._xmlrpc_query('refreshAvailablePhpVersions')
 
     def reset_php_fpm_files(self):
-        return self._api_request('resetPhpFpmFiles')
+        return self._xmlrpc_query('resetPhpFpmFiles')
 
-    def restart(self, **kwargs):
-        fields = {
-            'optional': {
-                'cond': int,
-                'cascade_to_nodes': int
-            }
-        }
-        return self._api_request('restart', fields=fields, **kwargs)
+    def restart(self, *, **kwargs):
+        return self._xmlrpc_query('restart', **kwargs)
 
-    def restart_on_node(self, **kwargs):
-        fields = {'optional': {'node_id': str}}
-        return self._api_request('restartOnNode', fields=fields, **kwargs)
+    def restart_on_node(self, *, **kwargs):
+        return self._xmlrpc_query('restartOnNode', **kwargs)
 
-    def restart_php_fpm(self, **kwargs):
-        fields = {'optional': {'cascade_to_nodes': int}}
-        return self._api_request('restartPhpFpm', fields=fields, **kwargs)
+    def restart_php_fpm(self, *, **kwargs):
+        return self._xmlrpc_query('restartPhpFpm', **kwargs)
 
-    def start(self, **kwargs):
-        fields = {'optional': {'cascade_to_nodes': int}}
-        return self._api_request('start', fields=fields, **kwargs)
+    def start(self, *, **kwargs):
+        return self._xmlrpc_query('start', **kwargs)
 
-    def start_on_boot(self, **kwargs):
-        fields = {'optional': {
-            'startonboot': int,
-            'cascade_to_nodes': int
-            }
-        }
-        return self._api_request('startOnBoot', fields=fields, **kwargs)
+    def start_on_boot(self, *, **kwargs):
+        return self._xmlrpc_query('startOnBoot', **kwargs)
 
-    def start_on_node(self, **kwargs):
-        fields = {'optional': {'node_id': str}}
-        return self._api_request('startOnNode', fields=fields, **kwargs)
+    def start_on_node(self, *, **kwargs):
+        return self._xmlrpc_query('startOnNode', **kwargs)
 
-    def stop(self, **kwargs):
-        fields = {'optional': {'cascade_to_nodes': int}}
-        return self._api_request('stop', fields=fields, **kwargs)
+    def stop(self, *, **kwargs):
+        return self._xmlrpc_query('stop', **kwargs)
 
-    def stop_on_node(self, **kwargs):
-        fields = {'optional': {'node_id': str}}
-        return self._api_request('stopOnNode', fields=fields, **kwargs)
+    def stop_on_node(self, *, **kwargs):
+        return self._xmlrpc_query('stopOnNode', **kwargs)
 
     def sync_all_config_files(self):
-        return self._api_request('syncAllConfigFiles')
+        return self._xmlrpc_query('syncAllConfigFiles')
 
-    def sync_config_files(self, **kwargs):
-        fields = {'required': {'domain': str}}
-        return self._api_request('syncConfigFiles', fields=fields, **kwargs)
+    def sync_config_files(self, *, domain, **kwargs):
+        return self._xmlrpc_query('syncConfigFiles', domain=domain, **kwargs)
 
     def sync_redirects(self):
-        return self._api_request('syncRedirects')
+        return self._xmlrpc_query('syncRedirects')
 
-    def update_php_mode(self, **kwargs):
-        fields = {'optional': {'php_mode': str}}
-        return self._api_request('updatePhpMode', fields=fields, **kwargs)
+    def update_php_mode(self, *, **kwargs):
+        return self._xmlrpc_query('updatePhpMode', **kwargs)
 
-    def update_rrd(self, **kwargs):
-        fields = {'optional': {'updateRrd': int}}
-        return self._api_request('updateRrd', fields=fields, **kwargs)
+    def update_rrd(self, *, **kwargs):
+        return self._xmlrpc_query('updateRrd', **kwargs)

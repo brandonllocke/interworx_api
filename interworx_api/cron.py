@@ -116,7 +116,7 @@ class NodeWorxCron(Controller):
         return self._xmlrpc_query('queryOptions', user=user)
 
 
-class SiteWorxCron(Cron):
+class SiteWorxCron(Controller):
     def __init__(self, server):
         super().__init__(server)
         self.controller = '/siteworx/cron'
