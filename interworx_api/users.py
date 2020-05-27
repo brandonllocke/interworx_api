@@ -266,6 +266,7 @@ class SiteWorxUsers(Controller):
         return self._xmlrpc_query("edit", wd=wd, **kwargs)
 
     def list_deletable(self, *, wd):
+        deletable = []
         """List deletable SiteWorx users.
 
         Args:
@@ -274,7 +275,10 @@ class SiteWorxUsers(Controller):
         Returns:
             list: list of SiteWorx users that can be deleted
         """
-        return self._xmlrpc_query("listDeletable", wd=wd)
+        response = self._xmlrpc_query("listDeletable", wd=wd)
+        for user in response:
+            deletable.append(user[0])
+        return deletable
 
     def list_editable(self, *, wd):
         """List editable SiteWorx users.

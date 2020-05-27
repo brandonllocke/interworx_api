@@ -28,6 +28,12 @@ instance, actions are defined in the API using camelCase, but since snake
 case is more "pythonic" all the calls have been rewritten in snake case. i.e.
 `listUsers` becomes `list_users`.
 
+Commands are formed as
+`<instance>.<nodeworx/siteworx>.<controller>.<action>`.
+For instance, if I wanted to use the FTP controller to add an account to siteworx account, the format would be `server.siteworx.ftp.add(params)`.
+
+### Basic Examples:
+
     # Connect to server:
     URL = 'myserver.domain.com'
     KEY = '<api key from NodeWorx>'
@@ -53,6 +59,17 @@ case is more "pythonic" all the calls have been rewritten in snake case. i.e.
         email='existingemail@user.com',
         password='supersecurepassword!!1',
         confirm_password='supersecurepassword!!1')
+
+### Advanced Examples:
+
+    # Delete all Siteworx accounts:
+    for account in server.nodeworx.siteworx.list_accounts():
+        server.nodeworx.siteworx.delete(domain=account['domain'])
+
+    # Delete all secondary Siteworx users (but not the master user):
+    for account in server.nodeworx.siteworx.list_accounts():
+        for deluser in server.siteworx.users.list_deletable(wd=account['domain']):
+            server.siteworx.users.delete(wd=account['domain'], user=deluser)
 
 ### Errors:
 

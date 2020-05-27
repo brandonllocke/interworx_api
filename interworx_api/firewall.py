@@ -199,7 +199,7 @@ class Firewall(Controller):
         """
         return self._xmlrpc_query('queryIpv6Settings')
 
-    def restart(self, *, **kwargs):
+    def restart(self, **kwargs):
         """ Restart the firewall service.
 
         Args:
@@ -210,26 +210,26 @@ class Firewall(Controller):
         """
         return self._xmlrpc_query('restart', **kwargs)
 
-    def restart_on_node(self, *, **kwargs):
+    def restart_on_node(self,  **kwargs):
         return self._xmlrpc_query('restartOnNode', **kwargs)
     
-    def start(self, *, **kwargs):
+    def start(self, **kwargs):
         return self._xmlrpc_query('start', **kwargs)
 
-    def start_on_boot(self, *, **kwargs):
+    def start_on_boot(self, **kwargs):
         return self._xmlrpc_query('startOnBoot', **kwargs)
 
-    def start_on_node(self, *, **kwargs):
+    def start_on_node(self, **kwargs):
         return self._xmlrpc_query('startOnNode', **kwargs)
 
-    def stop(self, *, **kwargs):
+    def stop(self, **kwargs):
         return self._xmlrpc_query('stop', **kwargs)
 
-    def stop_on_node(self, *, **kwargs):
+    def stop_on_node(self, **kwargs):
         return self._xmlrpc_query('stopOnNode', **kwargs)
     
     def update(self, *, ports, **kwargs):
         return self._xmlrpc_query('update', ports=ports, **kwargs)
     
-    def update_config(self, *, **kwargs):
+    def update_config(self, **kwargs):
         return self._xmlrpc_query('updateConfig', **kwargs)

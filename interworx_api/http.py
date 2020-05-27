@@ -5,7 +5,7 @@ class Http(Controller):
         super().__init__(server)
         self.controller = '/nodeworx/http'
 
-    def apache_update(self, *, **kwargs):
+    def apache_update(self, **kwargs):
         """ Update common apache web server settings.
 
         Args:
@@ -52,7 +52,7 @@ class Http(Controller):
         """
         return self._xmlrpc_query('apacheUpdate', **kwargs)
     
-    def auto_restart(self, *, **kwargs):
+    def auto_restart(self, **kwargs):
         return self._xmlrpc_query('autoRestart', **kwargs)
 
     def enable_multiple_php(self):
@@ -61,7 +61,7 @@ class Http(Controller):
     def is_running(self):
         return self._xmlrpc_query('isRunning')
 
-    def is_running_on_node(self, *, **kwargs):
+    def is_running_on_node(self, **kwargs):
         return self._xmlrpc_query('isRunningOnNode', **kwargs)
 
     def list_available_php_versions(self):
@@ -97,7 +97,7 @@ class Http(Controller):
     def list_service_page(self):
         return self._xmlrpc_query('listServicePage')
 
-    def multiple_php_options(self, *, **kwargs):
+    def multiple_php_options(self, **kwargs):
         return self._xmlrpc_query('multiplePhpOptions', **kwargs)
 
     def query_apache_update(self):
@@ -121,28 +121,28 @@ class Http(Controller):
     def reset_php_fpm_files(self):
         return self._xmlrpc_query('resetPhpFpmFiles')
 
-    def restart(self, *, **kwargs):
+    def restart(self, **kwargs):
         return self._xmlrpc_query('restart', **kwargs)
 
-    def restart_on_node(self, *, **kwargs):
+    def restart_on_node(self, **kwargs):
         return self._xmlrpc_query('restartOnNode', **kwargs)
 
-    def restart_php_fpm(self, *, **kwargs):
+    def restart_php_fpm(self, **kwargs):
         return self._xmlrpc_query('restartPhpFpm', **kwargs)
 
-    def start(self, *, **kwargs):
+    def start(self, **kwargs):
         return self._xmlrpc_query('start', **kwargs)
 
-    def start_on_boot(self, *, **kwargs):
+    def start_on_boot(self, **kwargs):
         return self._xmlrpc_query('startOnBoot', **kwargs)
 
-    def start_on_node(self, *, **kwargs):
+    def start_on_node(self, **kwargs):
         return self._xmlrpc_query('startOnNode', **kwargs)
 
-    def stop(self, *, **kwargs):
+    def stop(self, **kwargs):
         return self._xmlrpc_query('stop', **kwargs)
 
-    def stop_on_node(self, *, **kwargs):
+    def stop_on_node(self, **kwargs):
         return self._xmlrpc_query('stopOnNode', **kwargs)
 
     def sync_all_config_files(self):
@@ -154,8 +154,8 @@ class Http(Controller):
     def sync_redirects(self):
         return self._xmlrpc_query('syncRedirects')
 
-    def update_php_mode(self, *, **kwargs):
+    def update_php_mode(self, **kwargs):
         return self._xmlrpc_query('updatePhpMode', **kwargs)
 
-    def update_rrd(self, *, **kwargs):
+    def update_rrd(self, **kwargs):
         return self._xmlrpc_query('updateRrd', **kwargs)
