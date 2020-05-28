@@ -15,6 +15,10 @@ from .siteworx import SWAccounts
 from .cron import NodeWorxCron
 from .cron import SiteWorxCron
 from .http import Http
+from .health import Health
+from .help import Help
+from .index import Index
+from .ip import IP
 
 class Server():
     def __init__(self, server_url, key):
@@ -50,6 +54,10 @@ class NodeWorx():
         self.siteworx = SWAccounts(server)
         self.cron = NodeWorxCron(server)
         self.http = Http(server)
+        self.health = Health(server)
+        self.help = Help(server)
+        self.index = Index(server)
+        self.ip = IP(server)
 
 
 class SiteWorx():
