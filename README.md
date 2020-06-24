@@ -6,13 +6,18 @@ Interworx XMLRPC API outlined here:
 
 This is still very much in alpha. As of now, the only completed controllers
 are:
-* /nodeworx/users
 * /nodeworx/apikey
 * /nodeworx/backup
 * /nodeworx/cron
 * /nodeworx/firewall
 * /nodeworx/ftp
+* /nodeworx/help
+* /nodeworx/http
+* /nodeworx/index
+* /nodeworx/ip
+* /nodeworx/ip/sites
 * /nodeworx/siteworx
+* /nodeworx/users
 * /siteworx/backup
 * /siteworx/users
 * /siteworx/ftp

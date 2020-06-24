@@ -5,10 +5,14 @@ class Controller:
     
     def _modify_key(self, wd=None):
         if wd is not None:
-            key = {'apikey': self.key, 'domain': wd}
-            return key
+            return {'apikey': self.key, 'domain': wd}
         return self.key
 
     def _xmlrpc_query(self, action, wd=None, **kwargs):
         key = self._modify_key(wd)
         return self.server.get(key, self.controller, action, kwargs)
+
+    def falsey(self, input):
+        if input:
+            return 1
+        return 0

@@ -5,6 +5,7 @@ class IP(Controller):
     def __init__(self, server):
         super().__init__(server)
         self.controller = "/nodeworx/ip"
+        self.sites = IPSites(server)
 
     def activate(self, *, ip):
         return self._xmlrpc_query('activate', ip=ip)
@@ -51,3 +52,26 @@ class IP(Controller):
 
     def sync_ip_data(self, *, ip):
         return self._xmlrpc_query('syncIpData', ip=ip)
+
+class IPSites(Controller):
+    def __init__(self, server):
+        super().__init__(server)
+        self.controller = "/nodeworx/ip/sites"
+    
+    def default_sites_status(self, status=True):
+        return self._xmlrpc_query('defaultSitesStatus', status=self.falsey(status))
+
+    def disable_default_sites(self, **kwargs):
+        return self._xmlrpc_query('disableDefaultSites', **kwargs)
+    
+    def enable_default_sites(self, **kwargs):
+        return self._xmlrpc_query('enabledDefaultSites', **kwargs)
+
+    def list_ip_default_sites(self):
+        return self._xmlrpc_query('listIpDefaultSites')
+
+    def query_default_sites_status(self):
+        return self._xmlrpc_query('queryDefaultSitesStatus')
+
+    def update_ip_default_sites(self, *, ip, **kwargs):
+        return self._xmlrpc_query('updateIpDefaultSites', ip=ip, **kwargs)

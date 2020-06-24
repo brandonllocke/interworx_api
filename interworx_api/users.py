@@ -37,7 +37,6 @@ class NodeWorxUsers(Controller):
         Returns:
            str: NodeWorx user successfully added
         """
-
         return self._xmlrpc_query(
             "add",
             nickname=nickname,

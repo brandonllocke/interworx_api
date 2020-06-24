@@ -19,6 +19,9 @@ from .health import Health
 from .help import Help
 from .index import Index
 from .ip import IP
+from .ipv6 import IPv6
+from .lang import Lang
+from .logout import Logout
 
 class Server():
     def __init__(self, server_url, key):
@@ -58,6 +61,10 @@ class NodeWorx():
         self.help = Help(server)
         self.index = Index(server)
         self.ip = IP(server)
+        self.ipv6 = IPv6(server)
+        self.lang = Lang(server)
+        self.logout = Logout(server)
+        self.logs = Logs(server)
 
 
 class SiteWorx():
