@@ -8,34 +8,22 @@ class ApiKey(Controller):
     def list_api_key(self):
         """Displays the current API key on the server.
 
-        Args: 
-            None
-
-        Returns: 
-           str: a new API Key
+        :returns: a new API Key as a string
+        :rtype: str
         """
         return self._api_request('listApikey')
 
-    def generate(self):
-        """Generates a new API key on the server.
-
-        Args: 
-            None
-
-        Returns: 
-            Something.
-
-        TODO: Work on other authentication methods so generate API Key can be useful.
-        """
-        return self._api_request('generate')
+    #def generate(self):
+    #    """Generates a new API key on the server.
+    #
+    #    TODO: Work on other authentication methods so generate API Key can be useful.
+    #    """
+    #    return self._api_request('generate')
 
     def delete(self):
         """Deletes the currently authorized API key from server.
 
-        Args: 
-            None
-
-        Returns: 
-            str: generic success message
+        :returns: generic success message
+        :rtype: str
         """
         return self._api_request('delete')

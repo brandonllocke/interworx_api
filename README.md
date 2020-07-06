@@ -35,7 +35,9 @@ case is more "pythonic" all the calls have been rewritten in snake case. i.e.
 
 Commands are formed as
 `<instance>.<nodeworx/siteworx>.<controller>.<action>`.
-For instance, if I wanted to use the FTP controller to add an account to siteworx account, the format would be `server.siteworx.ftp.add(params)`.
+For example, if I wanted to use the FTP controller to add an account to siteworx account, the format would be `server.siteworx.ftp.add(params)`.
+
+Obviously, you can also assign anything for a lower variable if you'll be working in one particular area in your script. For instance, if you're only using siteworx calls, you could always set `siteworx = server.siteworx` and then make a call to `siteworx.ftp.add(params)`
 
 ### Basic Examples:
 
