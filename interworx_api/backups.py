@@ -6,67 +6,67 @@ class NodeWorxBackups(Controller):
         super().__init__(server)
         self.controller = '/nodeworx/backup'
 
-    def fullbackup(self, *, domains, **kwargs):
+    def fullbackup(self, *, domains, email=None):
         """ Creates a full backup for the specified domains.
 
-        Args:
-            domains (str/list): (required) domain to backup
-            email (str): where to send notification when backup has
-                completed.
-        
-        Returns:
-            str: generic success message
+        :param domains: the domain to backup (required)
+        :type domains: str/list
+        :param email: where to send notification when backup has completed
+        :type email: str
+        :returns: generic success message
+        :rtype: str
         """
-        return self._xmlrpc_query('fullbackup', domains=domains, **kwargs)
+        if email is None:
+            return self._xmlrpc_query('fullbackup', domains=domains)
+        return self._xmlrpc_query('fullbackup', domains=domains, email=email)
 
     def query_accounts(self, *, reseller):
         """ Query the backups based on the selected reseller.
 
-        Args:
-            reseller (str): reseller id (all, 1, 16, etc.)
-
-        Returns:
-            list: a list of dictionaries containing information regarding
-                backups for accounts under that reseller
+        :param reseller: the reseller id as a string
+        :type reseller: str
+        :returns: a list of dictionaries containing information regarding
+            backups for accounts under that reseller
+        :rtype: list
         """
         return self._xmlrpc_query('queryAccounts', reseller=reseller)
 
     def query_backups(self, *, domain):
         """ Get a list of backups given a domain.
 
-        Args:
-            domain (str): the domain to query backups for
-
-        Returns:
-            list: a list of dictionaries with info about all backups for
-                domain
+        :param domain: the domain to query backups for
+        :type domain: str
+        :returns: a list of dictionaries with info about all backups for
+            domain
+        :rtype: list
         """
         return self._xmlrpc_query('queryBackups', domain=domain)
 
-    def restore(self, *, domain, file, **kwargs):
+    def restore(self, *, domain, file):
         """ Restore a given backup (local).
 
-        Args:
-            domain (str): (required) the domain that will be restored
-            file (str): (required) the path to the file
-            confirm_action (int): (1) confirms the action should occur
-
-        Returns:
-            str: generic success message
+        :param domain: the domain that will be restored (required)
+        :type domain: str
+        :param file: the path to the file (required)
+        :type file: str
+        :returns: generic success message
+        :rtype: str
         """
-        return self._xmlrpc_query('restore', domain=domain, file=file, **kwargs)
+        return self._xmlrpc_query('restore', domain=domain, file=file, confirm_action=1)
 
-    def structureonly(self, *, domains, **kwargs):
+    def structureonly(self, *, domains, email=None):
         """ Creates a structure only backup for the specified domains.
 
-        Args:
-            domains (str/list): the domain to make the backup for
-            email (str): where to send notification when backup is completed
-
-        Returns:
-            str: generic success message
+        :param domains: the domain to make the backup for (required)
+        :type domains: str/list
+        :param email: where to send notification when backup is completed
+        :type email: str
+        :returns: generic success message
+        :rtype: str
         """
-        return self._xmlrpc_query('structureonly', domains=domains, **kwargs)
+        if email is None:
+            return self._xmlrpc_query('structureonly', domains=domains)
+        return self._xmlrpc_query('structureonly', domains=domains, email=email)
 
 
 class SiteWorxBackups(Controller):

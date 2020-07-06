@@ -22,6 +22,7 @@ from .ip import IP
 from .ipv6 import IPv6
 from .lang import Lang
 from .logout import Logout
+from .logs import Logs
 
 class Server():
     def __init__(self, server_url, key):
