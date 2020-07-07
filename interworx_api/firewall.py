@@ -111,34 +111,27 @@ class Firewall(Controller):
     def is_running(self):
         """ Checks if the service is running or not.
 
-        Args:
-            None
-
-        Returns:
-            bool: whether the service is running or not
+        :returns: whether the service is running or not
+        :rtype: bool
         """
         return self._xmlrpc_query("isRunning")
 
     def is_running_on_node(self, **kwargs):
-        """ Checks if the service is running on a sepcific node (clustering
+        """ Checks if the service is running on a specific node (clustering
         only).
 
-        Args:
-            node_id (str): the node id
-
-        Returns:
-            str: generic success message
+        :param node_id: the node id as a string
+        :type node_id: str
+        :returns: generic success message
+        :rtype: str
         """
         return self._xmlrpc_query("isRunningOnNode", **kwargs)
 
     def list_general_name(self):
         """ Lists the "normal" name - ie "web server" instead of httpd.
 
-        Args:
-            None
-        
-        Returns:
-            str: the general name
+        :returns: the general name
+        :rtype: str
         """
         return self._xmlrpc_query("listGeneralName")
 
@@ -146,11 +139,8 @@ class Firewall(Controller):
         """ Lists a string of the port numbers that this services uses,
         comma-separated.
 
-        Args:
-            None
-        
-        Returns:
-            str: the comma-separated list of ports used by the service
+        :returns: the comma-separated list of ports used by the service
+        :rtype: str
         """
         return self._xmlrpc_query("listPortNumbers")
 
@@ -158,66 +148,48 @@ class Firewall(Controller):
         """ Lists an array of the port numbers that this services uses,
         comma-separated.
 
-        Args:
-            None
-        
-        Returns:
-            list: a list of port numbers and arrays as strings
+        :returns: a list of port numbers and arrays as strings
+        :rtype: list
         """
         return self._xmlrpc_query("listPortNumbersArray")
 
     def list_required_permissions(self):
         """ List permissions required to control the service.
 
-        Args:
-            None
-
-        Returns:
-            list: list of required permissions as strings
+        :returns: list of required permissions as strings
+        :rtype: list
         """
         return self._xmlrpc_query("listRequiredPermissions")
 
     def list_service_info(self):
         """ Lists the service name, ports, page, and status.
 
-        Args:
-            None
-        
-        Returns:
-            dict: information about the service
+        :returns: information about the service
+        :rtype: dict
         """
         return self._xmlrpc_query("listServiceInfo")
 
     def list_service_name(self):
         """ Lists the service name - ie "httpd" instead of "web server'.
 
-        Args:
-            None
-        
-        Returns:
-            str: the service name
+        :returns: the service name
+        :rtype: str
         """
         return self._xmlrpc_query("listServiceName")
 
     def list_service_page(self):
         """ List the page that controls the service.
 
-        Args:
-            None
-        
-        Returns:
-            str: the service page
+        :returns: the service page
+        :rtype: str
         """
         return self._xmlrpc_query("listServicePage")
 
     def query_allow_deny_ips(self):
         """ Displays the information available to the action "allowDenyIps".
 
-        Args:
-            None
-        
-        Returns:
-            tuple: two lists (trusted_ips and blocked_ips)
+        :returns: two lists (trusted_ips and blocked_ips)
+        :rtype: tuple
         """
         trusted_ips = []
         blocked_ips = []
@@ -231,24 +203,20 @@ class Firewall(Controller):
     def query_ipv6_settings(self):
         """ Display the information available to the action "ipv6Settings".
 
-        Args:
-            None
-        
-        Returns:
-            dict: information available to action ipv6settings
+        :returns: information available to action ipv6settings
+        :rtype: dict
         """
         return self._xmlrpc_query("queryIpv6Settings")
 
-    def restart(self, **kwargs):
+    def restart(self, *, cascade_to_nodes=True):
         """ Restart the firewall service.
 
-        Args:
-            cascade_to_nodes (int): (1) replay on nodes?
-
-        Returns:
-            str: generic success message
+        :param cascade_to_nodes: replay on nodes (default: True)
+        :type cascade_to_nodes: bool
+        :returns: generic success message
+        :rtype: str
         """
-        return self._xmlrpc_query("restart", **kwargs)
+        return self._xmlrpc_query("restart", cascade_to_nodes=self.falsey(cascade_to_nodes))
 
     def restart_on_node(self, **kwargs):
         return self._xmlrpc_query("restartOnNode", **kwargs)
