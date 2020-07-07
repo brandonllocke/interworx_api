@@ -216,29 +216,155 @@ class Firewall(Controller):
         :returns: generic success message
         :rtype: str
         """
-        return self._xmlrpc_query("restart", cascade_to_nodes=self.falsey(cascade_to_nodes))
+        return self._xmlrpc_query(
+            "restart", cascade_to_nodes=self.falsey(cascade_to_nodes)
+        )
 
     def restart_on_node(self, **kwargs):
+        """ Restarts the service on a specific node (Clustering only)
+
+        :param node_id: the node id
+        :type: node_id: str
+        :returns: generic success message
+        :rtype: str
+        """
         return self._xmlrpc_query("restartOnNode", **kwargs)
 
-    def start(self, **kwargs):
-        return self._xmlrpc_query("start", **kwargs)
+    def start(self, *, cascade_to_nodes=True):
+        """ Starts the service
 
-    def start_on_boot(self, **kwargs):
-        return self._xmlrpc_query("startOnBoot", **kwargs)
+        :param cascade_to_nodes: replay on nodes (default: True)
+        :type cascade_to_nodes: bool
+        :returns: generic success message
+        :rtype: str
+        """
+        return self._xmlrpc_query(
+            "start", cascade_to_nodes=self.falsey(cascade_to_nodes)
+        )
+
+    def start_on_boot(self, *, startonboot=True, cascade_to_nodes=True):
+        """ Set the firewall start-on-boot status
+
+        :param startonboot: Whether to start on boot (default: True)
+        :type startonboot: bool
+        :param cascade_to_nodes: replay on nodes (default: True)
+        :type cascade_to_nodes: bool
+        :returns: generic success message
+        :rtype: str
+        """
+        return self._xmlrpc_query(
+            "startOnBoot",
+            startonboot=self.falsey(startonboot),
+            cascade_to_nodes=self.falsey(cascade_to_nodes),
+        )
 
     def start_on_node(self, **kwargs):
+        """ Starts the service on a specific node (Clustering only)
+
+        :param node_id: the node id
+        :type: node_id: str
+        :returns: generic success message
+        :rtype: str
+        """
         return self._xmlrpc_query("startOnNode", **kwargs)
 
     def stop(self, **kwargs):
+        """ Stops the service
+
+        :param cascade_to_nodes: replay on nodes (default: True)
+        :type cascade_to_nodes: bool
+        :returns: generic success message
+        :rtype: str
+        """
         return self._xmlrpc_query("stop", **kwargs)
 
     def stop_on_node(self, **kwargs):
+        """ Stops the service on a specific node (Clustering only)
+
+        :param node_id: the node id
+        :type: node_id: str
+        :returns: generic success message
+        :rtype: str
+        """
         return self._xmlrpc_query("stopOnNode", **kwargs)
 
     def update(self, *, ports, **kwargs):
+        """ Update a port in the firewall configuration
+
+        :param ports: which port to update
+        :type ports: str
+        :param tcp_flow_in: [none/open/closed]
+        :type tcp_flow_in: str
+        :param tcp_flow_out: [none/open/closed]
+        :type tcp_flow_out: str
+        :param udp_flow_in: [none/open/closed]
+        :type udp_flow_in: str
+        :param udp_flow_out: [none/open/closed]
+        :type udp_flow_out: str
+        :returns: generic success message
+        :rtype: str
+        """
         return self._xmlrpc_query("update", ports=ports, **kwargs)
 
-    def update_config(self, **kwargs):
-        return self._xmlrpc_query("updateConfig", **kwargs)
+    def update_config(
+        self,
+        *,
+        debug_mode=False,
+        default_tos=4,
+        tcp_drop_policy="DROP",
+        udp_drop_policy="DROP",
+        block_multicast=False,
+        block_private_network=False,
+        set_egress_filter=False,
+        max_sessions=34576,
+        sysctl_tcp=True,
+        interface="eth0",
+        cascade_to_nodes=True,
+        **kwargs
+    ):
+        """ Update basic firewall configuration
+
+        :param debug_mode: when enabled, firewall rules are flushed every 5
+            minutes to prevent being locked out (default: False)
+        :type debug_mode: bool
+        :param default_tos: defines the default type of service (default: 4)
+        :type default_tos: int
+        :param tcp_drop_policy: [RESET/DROP/REJECT] defines how tcp packets are filtered. (default: DROP)
+        :type tcp_drop_policy: str
+        :param udp_drop_policy: [RESET/DROP/REJECT] defines how udp packets are filtered. (default: DROP)
+        :type udp_drop_policy: str
+        :param block_multicast: defines if firewall should block multicast traffic (default: False)
+        :type block_multicast: bool
+        :param block_private_network: defines if firewall should block all private ipv4 addresses (default: False)
+        :type block_private_network: bool
+        :param set_egress_filter: outbound egress filtering provides full outbound packet filtering (default: False)
+        :type set_egress_filter: bool
+        :param max_sessions: defines max connection tracking entries to can be handled simultaneously (default: 34576)
+        :type max_sessions: int
+        :param sysctl_tcp: enabled or disables sysctl hook changes to harden the kernel from certain network-based attacks. (default: True)
+        :type sysctl_tcp: bool
+        :param interface: all traffic on defined interface will be subject to all firewall rules (default: eth0)
+        :type interface: str
+        :param tifs: all traffic on defined interface(s) will bypass all firewall rules
+        :type tifs: str/list
+        :param cascade_to_nodes: replay on nodes
+        :type cascade_to_nodes: bool
+        :returns: generic success message
+        :rtype: str
+        """
+        return self._xmlrpc_query(
+            "updateConfig",
+            debug_mode=self.falsey(debug_mode),
+            default_tos=default_tos,
+            tcp_drop_policy=tcp_drop_policy,
+            udp_drop_policy=udp_drop_policy,
+            block_multicast=self.falsey(block_multicast),
+            block_private_network=self.falsey(block_private_network),
+            set_egress_filter=self.falsey(set_regress_filter),
+            max_sessions=max_sessions,
+            sysctl_tcp=self.falsey(sysctl_tcp),
+            interface=interface,
+            cascade_to_nodes=self.falsey(cascade_to_nodes),
+            **kwargs
+        )
 
