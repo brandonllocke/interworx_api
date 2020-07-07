@@ -2,10 +2,10 @@ class Controller:
     def __init__(self, server):
         self.server = server
         self.key = server.key
-    
+
     def _modify_key(self, wd=None):
         if wd is not None:
-            return {'apikey': self.key, 'domain': wd}
+            return {"apikey": self.key, "domain": wd}
         return self.key
 
     def _xmlrpc_query(self, action, wd=None, **kwargs):

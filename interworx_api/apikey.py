@@ -1,9 +1,10 @@
 from .controller import Controller
 
+
 class ApiKey(Controller):
     def __init__(self, server):
         super().__init__(server)
-        self.controller = '/nodeworx/apikey'
+        self.controller = "/nodeworx/apikey"
 
     def list_api_key(self):
         """Displays the current API key on the server.
@@ -11,9 +12,9 @@ class ApiKey(Controller):
         :returns: API Key as a string
         :rtype: str
         """
-        return self._xmlrpc_query('listApikey')
+        return self._xmlrpc_query("listApikey")
 
-    #def generate(self):
+    # def generate(self):
     #    """Generates a new API key on the server.
     #
     #    TODO: Work on other authentication methods so generate API Key can be useful.
@@ -26,4 +27,4 @@ class ApiKey(Controller):
         :returns: generic success message
         :rtype: str
         """
-        return self._xmlrpc_query('delete')
+        return self._xmlrpc_query("delete")

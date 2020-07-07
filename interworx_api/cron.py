@@ -4,10 +4,20 @@ from .controller import Controller
 class NodeWorxCron(Controller):
     def __init__(self, server):
         super().__init__(server)
-        self.controller = '/nodeworx/cron'
+        self.controller = "/nodeworx/cron"
 
-    def add(self, *, interface='simple', user, script, minute=["*"],
-            hour=["*"], day=["*"], month=["*"], dayofweek=["*"]):
+    def add(
+        self,
+        *,
+        interface="simple",
+        user,
+        script,
+        minute=["*"],
+        hour=["*"],
+        day=["*"],
+        month=["*"],
+        dayofweek=["*"]
+    ):
         """ Add a job to a user's crontab.
 
         :param interface: the type of menu to present [simple/advanced]
@@ -31,8 +41,17 @@ class NodeWorxCron(Controller):
         :returns: generic success message
         :rtype: str
         """
-        return self._xmlrpc_query('add', interface=interface, user=user, script=script,
-                                  minute=minute, hour=hour, day=day, month=month, dayofweek=dayofweek)
+        return self._xmlrpc_query(
+            "add",
+            interface=interface,
+            user=user,
+            script=script,
+            minute=minute,
+            hour=hour,
+            day=day,
+            month=month,
+            dayofweek=dayofweek,
+        )
 
     def delete(self, *, user, jobs):
         """ Delete a job(s) from a user's crontab.
@@ -44,7 +63,7 @@ class NodeWorxCron(Controller):
         :returns: generic success message
         :rtype: str
         """
-        return self._xmlrpc_query('delete', user=user, jobs=jobs)
+        return self._xmlrpc_query("delete", user=user, jobs=jobs)
 
     def edit(self, *, user, job, enabled=True, **kwargs):
         """ Edit a cronjob on a user's crontab.
@@ -70,15 +89,17 @@ class NodeWorxCron(Controller):
         :returns: generic success message
         :rtype: str
         """
-        return self._xmlrpc_query('edit', user=user, job=job, enabled=self.falsey(enabled), **kwargs)
-    
+        return self._xmlrpc_query(
+            "edit", user=user, job=job, enabled=self.falsey(enabled), **kwargs
+        )
+
     def get_current_system_time(self):
         """ Get current system time in RFC822 format.
 
         :returns: current time in RFC822 format
         :rtype: str
         """
-        return self._xmlrpc_query('getCurrentSystemTime')
+        return self._xmlrpc_query("getCurrentSystemTime")
 
     def options(self, *, user, **kwargs):
         """ Manage options for cron users.
@@ -94,7 +115,7 @@ class NodeWorxCron(Controller):
         :returns: generic success message
         :rtype: str
         """
-        return self._xmlrpc_query('options', user=user, **kwargs)
+        return self._xmlrpc_query("options", user=user, **kwargs)
 
     def query_edit(self, *, user, job):
         """ Displays the information available to the action "edit".
@@ -106,7 +127,7 @@ class NodeWorxCron(Controller):
         :returns: a dictionary of editable fields for the cronjob
         :rtype: dict
         """
-        return self._xmlrpc_query('queryEdit', user=user, job=job)
+        return self._xmlrpc_query("queryEdit", user=user, job=job)
 
     def query_jobs(self, *, user):
         """ List user jobs.
@@ -116,8 +137,8 @@ class NodeWorxCron(Controller):
         :returns: a list of dictionaries for each cronjob
         :rtype: list
         """
-        return self._xmlrpc_query('queryJobs', user=user)
-    
+        return self._xmlrpc_query("queryJobs", user=user)
+
     def query_options(self, *, user):
         """ Displays the information available to the action 'options'.
 
@@ -126,13 +147,13 @@ class NodeWorxCron(Controller):
         :returns: a dictionary containing editable fields for the crontab options
         :rtype: dict
         """
-        return self._xmlrpc_query('queryOptions', user=user)
+        return self._xmlrpc_query("queryOptions", user=user)
 
 
 class SiteWorxCron(Controller):
     def __init__(self, server):
         super().__init__(server)
-        self.controller = '/siteworx/cron'
+        self.controller = "/siteworx/cron"
 
     def add(self, *, wd, script, **kwargs):
         """ Add a new cronjob to the user's crontab.
@@ -149,7 +170,7 @@ class SiteWorxCron(Controller):
         Returns:
             str: generic success message
         """
-        return self._xmlrpc_query('add', wd=wd, script=script, **kwargs)
+        return self._xmlrpc_query("add", wd=wd, script=script, **kwargs)
 
     def delete(self, *, wd, jobs):
         """ Delete cronjob from the SiteWorx user's crontab.
@@ -161,7 +182,7 @@ class SiteWorxCron(Controller):
         Returns:
             str: generic success message
         """
-        return self._xmlrpc_query('delete', wd=wd, jobs=jobs)
+        return self._xmlrpc_query("delete", wd=wd, jobs=jobs)
 
     def edit(self, *, wd, job, **kwargs):
         """ Edit a cronjob on a user's crontab.
@@ -180,8 +201,8 @@ class SiteWorxCron(Controller):
         Returns: 
             str: generic success message
         """
-        return self._xmlrpc_query('edit', wd=wd, job=job, **kwargs)
-    
+        return self._xmlrpc_query("edit", wd=wd, job=job, **kwargs)
+
     def get_current_system_time(self, *, wd):
         """ Get current system time in RFC822 format.
 
@@ -191,7 +212,7 @@ class SiteWorxCron(Controller):
         Returns:
             str: current time in RFC822 format.
         """
-        return self._xmlrpc_query('getCurrentSystemTime', wd=wd)
+        return self._xmlrpc_query("getCurrentSystemTime", wd=wd)
 
     def options(self, *, wd, user, **kwargs):
         """ Manage options for cron users.
@@ -206,8 +227,8 @@ class SiteWorxCron(Controller):
         Returns:
             str: generic success message
         """
-        return self._xmlrpc_query('options', wd=wd, user=user, **kwargs)
-    
+        return self._xmlrpc_query("options", wd=wd, user=user, **kwargs)
+
     def query_edit(self, *, wd, job):
         """ Displays the information available to the action "edit".
 
@@ -219,7 +240,7 @@ class SiteWorxCron(Controller):
             dict: a dictionary of editable fields for the job
         """
         parsed_jobs = []
-        return self._xmlrpc_query('queryEdit', wd=wd, job=job)
+        return self._xmlrpc_query("queryEdit", wd=wd, job=job)
 
     def query_jobs(self, *, wd):
         """ List user jobs.
@@ -230,7 +251,7 @@ class SiteWorxCron(Controller):
         Returns:
             list: a list of dictionaries containing job information
         """
-        return self._xmlrpc_query('queryJobs', wd=wd)
+        return self._xmlrpc_query("queryJobs", wd=wd)
 
     def query_options(self, wd):
         """ Display the information available to the action "options".
@@ -241,4 +262,5 @@ class SiteWorxCron(Controller):
         Returns:
             list: a list of dictionaries containing option information
         """
-        return self._xmlrpc_query('queryOptions', wd=wd)
+        return self._xmlrpc_query("queryOptions", wd=wd)
+

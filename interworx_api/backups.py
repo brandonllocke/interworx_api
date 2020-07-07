@@ -4,7 +4,7 @@ from .controller import Controller
 class NodeWorxBackups(Controller):
     def __init__(self, server):
         super().__init__(server)
-        self.controller = '/nodeworx/backup'
+        self.controller = "/nodeworx/backup"
 
     def fullbackup(self, *, domains, email=None):
         """ Creates a full backup for the specified domains.
@@ -17,8 +17,8 @@ class NodeWorxBackups(Controller):
         :rtype: str
         """
         if email is None:
-            return self._xmlrpc_query('fullbackup', domains=domains)
-        return self._xmlrpc_query('fullbackup', domains=domains, email=email)
+            return self._xmlrpc_query("fullbackup", domains=domains)
+        return self._xmlrpc_query("fullbackup", domains=domains, email=email)
 
     def query_accounts(self, *, reseller):
         """ Query the backups based on the selected reseller.
@@ -29,7 +29,7 @@ class NodeWorxBackups(Controller):
             backups for accounts under that reseller
         :rtype: list
         """
-        return self._xmlrpc_query('queryAccounts', reseller=reseller)
+        return self._xmlrpc_query("queryAccounts", reseller=reseller)
 
     def query_backups(self, *, domain):
         """ Get a list of backups given a domain.
@@ -40,7 +40,7 @@ class NodeWorxBackups(Controller):
             domain
         :rtype: list
         """
-        return self._xmlrpc_query('queryBackups', domain=domain)
+        return self._xmlrpc_query("queryBackups", domain=domain)
 
     def restore(self, *, domain, file):
         """ Restore a given backup (local).
@@ -52,7 +52,7 @@ class NodeWorxBackups(Controller):
         :returns: generic success message
         :rtype: str
         """
-        return self._xmlrpc_query('restore', domain=domain, file=file, confirm_action=1)
+        return self._xmlrpc_query("restore", domain=domain, file=file, confirm_action=1)
 
     def structureonly(self, *, domains, email=None):
         """ Creates a structure only backup for the specified domains.
@@ -65,14 +65,14 @@ class NodeWorxBackups(Controller):
         :rtype: str
         """
         if email is None:
-            return self._xmlrpc_query('structureonly', domains=domains)
-        return self._xmlrpc_query('structureonly', domains=domains, email=email)
+            return self._xmlrpc_query("structureonly", domains=domains)
+        return self._xmlrpc_query("structureonly", domains=domains, email=email)
 
 
 class SiteWorxBackups(Controller):
     def __init__(self, server):
         super().__init__(server)
-        self.controller = '/siteworx/backup'
+        self.controller = "/siteworx/backup"
 
     def create(self, *, wd, type, location, **kwargs):
         """ Create a SiteWorx backup.
@@ -92,7 +92,9 @@ class SiteWorxBackups(Controller):
         Returns:
            str: generic success message
         """
-        return self._xmlrpc_query('create', wd=wd, type=type, location=location, **kwargs)
+        return self._xmlrpc_query(
+            "create", wd=wd, type=type, location=location, **kwargs
+        )
 
     def delete(self, *, wd, backups):
         """ Delete a siteworx backup.
@@ -104,7 +106,7 @@ class SiteWorxBackups(Controller):
         Returns:
             str: generic success message
         """
-        return self._xmlrpc_query('delete', wd=wd, backups=backups)
+        return self._xmlrpc_query("delete", wd=wd, backups=backups)
 
     def list_all_backups(self, *, wd):
         """ List all backups created manually.
@@ -115,7 +117,7 @@ class SiteWorxBackups(Controller):
         Returns:
             list: list of dictionaries containing backup information
         """
-        return self._xmlrpc_query('listAllBackups', wd=wd)
+        return self._xmlrpc_query("listAllBackups", wd=wd)
 
     def list_daily_backups(self, *, wd):
         """ List all current daily backups.
@@ -126,7 +128,7 @@ class SiteWorxBackups(Controller):
         Returns:
             list: list of dictionaries containing backup information
         """
-        return self._xmlrpc_query('listDailyBackups', wd=wd)
+        return self._xmlrpc_query("listDailyBackups", wd=wd)
 
     def list_weekly_backups(self, *, wd):
         """ List all current weekly backups.
@@ -137,7 +139,7 @@ class SiteWorxBackups(Controller):
         Returns:
             list: list of dictionaries containing backup information
         """
-        return self._xmlrpc_query('listWeeklyBackups', wd=wd)
+        return self._xmlrpc_query("listWeeklyBackups", wd=wd)
 
     def list_monthly_backups(self, *, wd):
         """ List all current monthly backups.
@@ -148,7 +150,7 @@ class SiteWorxBackups(Controller):
         Returns:
             list: list of dictionaries containing backup information
         """
-        return self._xmlrpc_query('listMonthlyBackups', wd=wd)
+        return self._xmlrpc_query("listMonthlyBackups", wd=wd)
 
     def restore(self, *, wd, filetype, file):
         """ Restore a partial siteworx backup.
@@ -161,4 +163,5 @@ class SiteWorxBackups(Controller):
         Returns:
             str: generic success message
         """
-        return self._xmlrpc_query('restore', wd=wd, filetype=filetype, file=file)
+        return self._xmlrpc_query("restore", wd=wd, filetype=filetype, file=file)
+
