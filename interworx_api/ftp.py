@@ -6,320 +6,331 @@ class NodeWorxFTP(Controller):
         super().__init__(server)
         self.controller = "/nodeworx/ftp"
 
-    def auto_restart(self, **kwargs):
+    def auto_restart(self, *, ftp_autorestart=False, cascade_to_nodes=True):
         """ Sets the FTP server autostart status.
 
-        Args:
-            ftp_autorestart (int): (0/1) whether FTP restarts automatically
-                if FTP goes down unexpectedly
-            cascade_to_nodes (int): (0/1) whether this change should be made
-                on all nodes
-
-        Returns:
-            str: generic success message
+        :param ftp_autorestart: whether FTP restarts automatically if FTP goes down unexpectedly (default: False)
+        :type ftp_autorestart: bool
+        :param cascade_to_nodes: replay change on nodes (default: True)
+        :type cascade_to_nodes: bool
+        :returns: generic success message
+        :rtype: str
         """
-        return self._xmlrpc_query("autoRestart", **kwargs)
+        return self._xmlrpc_query(
+            "autoRestart",
+            ftp_autorestart=self.falsey(ftp_autorestart),
+            cascade_to_nodes=self.falsey(cascade_to_nodes),
+        )
 
     def is_running(self):
         """ Checks if the service is running or not.
 
-        Args:
-            None
-        
-        Returns:
-            bool: whether service is running (True) or not (False)
+        :returns: whether service is running (True) or not (False)
+        :rtype: bool
         """
         return self._xmlrpc_query("isRunning")
 
     def is_running_on_node(self, **kwargs):
         """ Checks if service is running on a specific node.
 
-        Args:
-            node_id (int): the id number of the node
-
-        Returns:
-            bool: whether service is running (True) or not (False)
+        :param node_id: the id number of the node
+        :type node_id: str
+        :returns: whether service is running (True) or not (False)
+        :rtype: bool
         """
         return self._xmlrpc_query("isRunningOnNode", **kwargs)
 
     def kill_sessions(self, *, sessions):
         """ Kill a running FTP session.
 
-        Args:
-            sessions (str/list): (required) a string or list of session pids
-
-        Returns:
-            str: generic success message
+        :param sessions: a string or list of session pids (required)
+        :type sessions: str/list
+        :returns: generic success message
+        :rtype: str
         """
         return self._xmlrpc_query("killSessions", sessions=sessions)
 
     def list_ftp_sessions(self):
         """ Lists currently active FTP sessions.
 
-        Args:
-            None
-
-        Returns:
-            list: list of dictionaries containing session information
+        :returns: list of dictionaries containing session information
+        :rtype: list
         """
         return self._xmlrpc_query("listFtpSessions")
 
     def list_general_name(self):
         """ List the services' general name.
 
-        Args:
-            None
-            
-        Returns:
-            str: the generic service name
+        :returns: the generic service name
+        :rtype: str
         """
         return self._xmlrpc_query("listGeneralName")
 
     def list_port_numbers(self):
         """ List the ports used by the service.
 
-        Args:
-            None
-
-        Returns:
-            str: comma separated port numbers
+        :returns: comma separated port numbers
+        :rtype: str
         """
         return self._xmlrpc_query("listPortNumbers")
 
     def list_port_numbers_array(self):
         """ List the ports used by the service in a list
 
-        Args:
-            None
-
-        Returns:
-            list: list of integers containing port numbers
+        :returns: list of integers containing port numbers
+        :rtype: list
         """
         return self._xmlrpc_query("listPortNumbersArray")
 
     def list_required_permissions(self):
         """ List required permissions for FTP management.
 
-        Args:
-            None
-        
-        Returns:
-            list: list of strings containing required permissions
+        :returns: list of strings containing required permissions
+        :rtype: list
         """
         return self._xmlrpc_query("listRequiredPermissions")
 
     def list_service_info(self):
         """ List service information for FTP.
 
-        Args:
-            None
-
-        Returns:
-            dict: dictionary of information about FTP server.
+        :returns: dictionary of information about FTP server
+        :rtype: dict
         """
         return self._xmlrpc_query("listServiceInfo")
 
     def list_service_name(self):
         """ List the service name for the FTP server.
 
-        Args:
-            None
-
-        Returns:
-            str: the service name
+        :returns: the service name
+        :rtype: str
         """
         return self._xmlrpc_query("listServiceName")
 
     def list_service_page(self):
         """ List the service page for the FTP server.
 
-        Args:
-            None
-
-        Returns:
-            str: the service page
+        :returns: the service page
+        :rtype: str
         """
         return self._xmlrpc_query("listServicePage")
 
     def query_auto_restart(self):
         """ Query the restart status of the FTP server.
 
-        Args:
-            None
-        
-        Returns:
-            bool: whether service will autorestart (True) or not (False)
+        :returns: whether service will autorestart (True) or not (False)
+        :rtype: bool
         """
         response = self._xmlrpc_query("queryAutoRestart")
-        if response["ftp_autorestart"] == 0:
-            return True
-        return False
+        return response["ftp_autorestart"] == 0
 
     def query_edit_conf(self):
         """ Query editable options for the FTP server.
 
-        Args:
-            None
-        
-        Returns:
-            tuple: a tuple with the file path and file contents
+        :returns: a tuple with the file path and file contents
+        :rtype: tuple
         """
         response = self._xmlrpc_query("queryEditConf")
-        path = response["file"]
-        file_content = response["file_content"]
-        return path, file_content
+        return response["file"], response["file_content"]
 
     def query_server_options(self):
         """ Query the server options for the FTP server.
 
-        Args:
-            None
-
-        Returns:
-            dict: dictionary of all server options
+        :returns: dictionary of all server options
+        :rtype: dict
         """
         return self._xmlrpc_query("queryServerOptions")
 
     def query_sftp_options(self):
         """ Query the server's SFTP options.
 
-        Args:
-            None
-
-        Returns:
-            dict: a dictionary of all sftp options
+        :returns: a dictionary of all sftp options
+        :rtype: dict
         """
         return self._xmlrpc_query("querySftpOptions")
 
-    def restart(self, **kwargs):
+    def restart(self, *, cascade_to_nodes=True):
         """ Restart the FTP service.
 
-        Args:
-            cascade_to_nodes (int): (0/1) whether to repeat on all nodes
-
-        Returns:
-            str: generic success message
+        :param cascade_to_nodes: repeat on all nodes (default: True)
+        :type cascade_to_nodes: bool
+        :returns: generic success message
+        :rtype: str
         """
-        return self._xmlrpc_query("restart", **kwargs)
+        return self._xmlrpc_query(
+            "restart", cascade_to_nodes=self.falsey(cascade_to_nodes)
+        )
 
     def restart_on_node(self, **kwargs):
         """ Restart FTP service on a particular node.
 
-        Args:
-            node_id (str): the id of the node
-        
-        Returns:
-            str: generic success message
+        :param node_id: the id of the node
+        :type node_id: str
+        :returns: generic success message
+        :rtype: str
         """
         return self._xmlrpc_query("restartOnNode", **kwargs)
 
-    def rrd_graph(self, **kwargs):
+    def rrd_graph(self, *, rrd=False):
         """ Enables/disables the RRD graph for FTP activity.
 
-        Args:
-            rrd (int): (0/1) whether to display the graph
-
-        Returns:
-            str: generic success message
+        :param rrd: whether to display the graph
+        :type rrd: bool
+        :returns: generic success message
+        :rtype: str
         """
-        return self._xmlrpc_query("rrdGraph", **kwargs)
+        return self._xmlrpc_query("rrdGraph", rrd=self.falsey(rrd))
 
-    def server_options(self, **kwargs):
+    def server_options(
+        self,
+        *,
+        maxinstances=30,
+        maxclients=25,
+        maxclientsperuser=999999999,
+        timeoutlogin=120,
+        timeoutidle=600,
+        timeoutnotransfer=900,
+        timeoutstalled=3600,
+        timeoutsessions=0,
+        maxloginattempts=3,
+        tlsrequired=False,
+        showsymlinks=True,
+        allowretrieverestart=True,
+        allowstorerestart=True,
+        cascade_to_nodes=True
+    ):
         """ Set server options for FTP server.
 
-        Args:
-            maxinstances (int): maximum child processes to spawn
-            maxclients (int): total number of FTP clients allowed to connect
-            maxclientsperuser (int): total number of FTP clients allowed for
-                one user id
-            timeoutlogin (int): set login timeout
-            timeoutidle (int): set the idle timeout
-            timeoutnottransfer (int): sets connection without transfer
-                timeout
-            timeoutstalled (int): sets the timeout on stalled downloads
-            timeoutsession (int): set a timeout for entire session
-            maxloginattempts (int): set how many password attempts allowed
-                before disconnection
-            tlsrequired (int): require TLS (FTPS)
-            showsymlinks (int): toggle the display of symlinks
-            allowretrieverestart (int): allow clients to resume uploads
-            allowstorerestart (int): allow clients to resume downloads
-            cascade_to_nodes (int): replay on all nodes?
-
-        Returns:
-            str: generic success message
+        :param maxinstances: maximum child processes to spawn (default: 30)
+        :type maxinstances: int
+        :param maxclients: total number of FTP clients allowed to connect (default: 25)
+        :type maxclients: int
+        :param maxclientsperuser: total number of FTP clients allowed for one user id (default: 999999999)
+        :type maxclientsperuser: int
+        :param timeoutlogin: set login timeout (default: 120)
+        :type timeoutlogin: int
+        :param timeoutidle: set the idle timeout (default: 600)
+        :type timeoutidle: int
+        :param timeoutnotransfer: sets connection without transfer timeout (default: 900)
+        :type timeoutnotransfer: int
+        :param timeoutstalled: sets the timeout on stalled downloads (default: 3600)
+        :type timeoutstalled: int
+        :param timeoutsession: set a timeout for entire session (default: 0)
+        :type timeoutsession: int
+        :param maxloginattempts: set how many password attempts allowed
+            before disconnection (default: 3)
+        :type maxloginattempts: int
+        :param tlsrequired: require TLS (FTPS)
+        :type tlsrequired: bool
+        :param showsymlinks: toggle the display of symlinks (default: True)
+        :type showsymlinks: bool
+        :param allowretrieverestart: allow clients to resume uploads (default: True)
+        :type allowretrieverestart: bool
+        :param allowstorerestart: allow clients to resume downloads (default: True)
+        :type allowstorerestart: bool
+        :param cascade_to_nodes: replay on all nodes (default: True)
+        :type cascade_to_nodes: bool
+        :returns: generic success message
+        :rtype: str
         """
-        return self._xmlrpc_query("serverOptions", **kwargs)
+        return self._xmlrpc_query(
+            "serverOptions",
+            maxinstances=maxinstances,
+            maxclients=maxclients,
+            maxclientsperuser=maxclientsperuser,
+            timeoutlogin=timeoutlogin,
+            timeoutidle=timeoutidle,
+            timeoutnotransfer=timeoutnotransfer,
+            timeoutstalled=timeoutstalled,
+            timeoutsessions=timeoutsessions,
+            maxloginattempts=maxloginattempts,
+            tlsrequired=self.falsey(tlsrequired),
+            showsymlinks=self.falsey(showsymlinks),
+            allowretrieverestart=self.falsey(allowretrieverestart),
+            allowstorerestart=self.falsey(allowstorerestart),
+            cascade_to_nodes=self.falsey(cascade_to_nodes),
+        )
 
-    def sftp_options(self, **kwargs):
+    def sftp_options(
+        self, *, port=24, maxloginattempts=6, sftpengine=True, cascade_to_nodes=True
+    ):
         """ Update SFTP server settings.
 
-        Args:
-            port (int): the port used for SFTP service
-            maxloginattempts (int): sets how many password attempts are
-                allowed before disconnection
-            sftpengine (int): (0/1) current status of sftp engine
-            cascade_to_nodes (int): replay on all nodes?
-        
-        Returns:
-            str: generic success message
+        :param port: the port used for SFTP service (default: 24)
+        :type port: int
+        :param maxloginattempts: sets how many password attempts are
+            allowed before disconnection (default: 6)
+        :type maxloginattempts: int
+        :param sftpengine: current status of sftp engine (default: True)
+        :type sftpengine: bool
+        :param cascade_to_nodes: replay on all nodes (default: True)
+        :type cascade_to_nodes: bool
+        :returns: generic success message
+        :rtype: str
         """
-        return self._xmlrpc_query("sftpOptions", **kwargs)
+        return self._xmlrpc_query(
+            "sftpOptions",
+            port=port,
+            maxloginattempts=maxloginattempts,
+            sftpengine=self.falsey(sftpengine),
+            cascade_to_nodes=self.falsey(cascade_to_nodes),
+        )
 
-    def start(self, **kwargs):
+    def start(self, *, cascade_to_nodes=True):
         """ Starts the FTP service.
 
-        Args:
-            cascade_to_nodes (int): replay on all nodes?
-
-        Returns:
-            str: generic success message
+        :param cascade_to_nodes: replay on all nodes (default: True)
+        :type cascade_to_nodes: bool
+        :returns: generic success message
+        :rtype: str
         """
-        return self._xmlrpc_query("start", **kwargs)
+        return self._xmlrpc_query(
+            "start", cascade_to_nodes=self.falsey(cascade_to_nodes)
+        )
 
-    def start_on_boot(self, **kwargs):
+    def start_on_boot(self, *, ftp_startonboot=True, cascade_to_nodes=True):
         """ Set the FTP server start-on-boot status.
 
-        Args:
-            ftp_startonboot (int): (0/1) whether FTP is automatically started
-                on server start up
-            cascade_to_nodes (int): replay on all nodes?
-
-        Returns:
-            str: generic success message
+        :param ftp_startonboot: whether FTP is automatically started
+            on server start up (default: True)
+        :type ftp_startonboot: bool
+        :param cascade_to_nodes: replay on all nodes (default: True)
+        :type cascade_to_nodes: bool
+        :returns: generic success message
+        :rtype: str
         """
-        return self._xmlrpc_query("startOnBoot", **kwargs)
+        return self._xmlrpc_query(
+            "startOnBoot",
+            ftp_startonboot=self.falsey(ftp_startonboot),
+            cascade_to_nodes=self.falsey(cascade_to_nodes),
+        )
 
     def start_on_node(self, **kwargs):
         """ Starts the service on a specific node.
 
-        Args:
-            node_id (str): the id of the node to start on
-
-        Retuns:
-            str: generic success message
+        :param node_id: the id of the node to start on
+        :type node_id: str
+        :returns: generic success message
+        :rtype: str
         """
         return self._xmlrpc_query("startOnNode", **kwargs)
 
-    def stop(self, **kwargs):
+    def stop(self, *, cascade_to_nodes=True):
         """ Stops the FTP service.
 
-        Args:
-            cascade_to_nodes (int): replay on all nodes?
-
-        Returns:
-            str: generic success message
+        :param cascade_to_nodes: replay on all nodes (default: True)
+        :type cascade_to_nodes: bool
+        :returns: generic success message
+        :rtype: str
         """
-        return self._xmlrpc_query("stop", **kwargs)
+        return self._xmlrpc_query("stop", cascade_to_nodes=self.falsey(cascade_to_nodes))
 
     def stop_on_node(self, **kwargs):
         """ Stops the service on a specific node.
 
-        Args:
-            node_id (str): the id of the node to start on
-        
-        Returns:
-            str: generic success message
+        :param node_id: the id of the node to start on
+        :type node_id: str
+        :returns: generic success message
+        :rtype: str
         """
         return self._xmlrpc_query("stopOnNode", **kwargs)
 
@@ -411,7 +422,7 @@ class SiteWorxFTP(Controller):
         Returns:
             str: generic success message
         """
-        return self._xmlrpc_query("suspend", wd=wd, user=user, **kwargs)
+        return self._xmlrpc_query("suspend", wd=wd, user=user)
 
     def unsuspend(self, wd, user):
         """ Unsuspend an FTP account.

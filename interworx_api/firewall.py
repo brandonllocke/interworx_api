@@ -360,7 +360,7 @@ class Firewall(Controller):
             udp_drop_policy=udp_drop_policy,
             block_multicast=self.falsey(block_multicast),
             block_private_network=self.falsey(block_private_network),
-            set_egress_filter=self.falsey(set_regress_filter),
+            set_egress_filter=self.falsey(set_egress_filter),
             max_sessions=max_sessions,
             sysctl_tcp=self.falsey(sysctl_tcp),
             interface=interface,
