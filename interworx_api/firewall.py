@@ -367,4 +367,3 @@ class Firewall(Controller):
             cascade_to_nodes=self.falsey(cascade_to_nodes),
             **kwargs
         )
-
