@@ -16,3 +16,12 @@ class Controller:
         if input:
             return 1
         return 0
+
+    def fail(self):
+        return self._xmlrpc_query('fail')
+
+    def reroute(self, *, controller='Index'):
+        return self._xmlrpc_query('reroute', controller=controller)
+
+    def win(self):
+        return self._xmlrpc_query('win')

@@ -23,6 +23,7 @@ from .ipv6 import IPv6
 from .lang import Lang
 from .logout import Logout
 from .logs import Logs
+from .mysql import MySQL
 
 class Server():
     def __init__(self, server_url, key):
@@ -66,6 +67,7 @@ class NodeWorx():
         self.lang = Lang(server)
         self.logout = Logout(server)
         self.logs = Logs(server)
+        self.mysql = MySQL(server)
 
 
 class SiteWorx():
