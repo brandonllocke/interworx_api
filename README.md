@@ -11,11 +11,19 @@ are:
 * /nodeworx/cron
 * /nodeworx/firewall
 * /nodeworx/ftp
+* /nodeworx/health
 * /nodeworx/help
 * /nodeworx/http
 * /nodeworx/index
 * /nodeworx/ip
 * /nodeworx/ip/sites
+* /nodeworx/ipv6
+* /nodeworx/lang
+* /nodeworx/logout
+* /nodeworx/logs
+* /nodeworx/mysql
+* /nodeworx/mysql/phpmyadmin
+* /nodeworx/mysql/remote
 * /nodeworx/siteworx
 * /nodeworx/users
 * /siteworx/backup
@@ -80,7 +88,7 @@ Obviously, you can also assign anything for a lower variable if you'll be workin
 
 ### Errors:
 
-This library does very little input checking and instead relies on the API
+This library does some input checking but mostly relies on the API
 response to tell the user when things are incorrectly formed. When the server
-returns a non-`0` response, the output will simply show whatever message the
+returns a non-`0` response, the output will simply show the server message the
 server returned.
