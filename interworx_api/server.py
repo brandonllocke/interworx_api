@@ -24,6 +24,8 @@ from .lang import Lang
 from .logout import Logout
 from .logs import Logs
 from .mysql import MySQL
+from .notice import Notice
+from .overview import Overview
 
 class Server():
     def __init__(self, server_url, key):
@@ -70,6 +72,7 @@ class NodeWorx():
         self.mysql = MySQL(server)
         self.nfs = Nfs(server)
         self.notice = Notice(server)
+        self.overview = Overview(server)
 
 
 class SiteWorx():
