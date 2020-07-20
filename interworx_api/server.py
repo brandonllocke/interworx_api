@@ -68,6 +68,8 @@ class NodeWorx():
         self.logout = Logout(server)
         self.logs = Logs(server)
         self.mysql = MySQL(server)
+        self.nfs = Nfs(server)
+        self.notice = Notice(server)
 
 
 class SiteWorx():
