@@ -4,7 +4,7 @@ This API Wrapper is designed to make it much easier to interact with the
 Interworx XMLRPC API outlined here:
 [http://docs.interworx.com/interworx/api/index.php](http://docs.interworx.com/interworx/api/index.php)
 
-As of now, _**none**_ of the clustering options are tested. I simply
+As of now, _none_ of the clustering options are tested. I simply
 don't have a way to test against a cluster with my current setup.
 
 ## Usage:
