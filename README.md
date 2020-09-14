@@ -1,94 +1,105 @@
-# InterWorx API Library
+# InterWorx API Wrapper
 
-This library is designed to make it much easier to interact with the
+This API Wrapper is designed to make it much easier to interact with the
 Interworx XMLRPC API outlined here:
 [http://docs.interworx.com/interworx/api/index.php](http://docs.interworx.com/interworx/api/index.php)
-
-This is still very much in alpha. As of now, the only completed controllers
-are:
-* /nodeworx/apikey
-* /nodeworx/backup
-* /nodeworx/cron
-* /nodeworx/firewall
-* /nodeworx/ftp
-* /nodeworx/health
-* /nodeworx/help
-* /nodeworx/http
-* /nodeworx/index
-* /nodeworx/ip
-* /nodeworx/ip/sites
-* /nodeworx/ipv6
-* /nodeworx/lang
-* /nodeworx/logout
-* /nodeworx/logs
-* /nodeworx/mysql
-* /nodeworx/mysql/phpmyadmin
-* /nodeworx/mysql/remote
-* /nodeworx/siteworx
-* /nodeworx/users
-* /siteworx/backup
-* /siteworx/users
-* /siteworx/ftp
 
 As of now, _**none**_ of the clustering options are tested. I simply
 don't have a way to test against a cluster with my current setup.
 
 ## Usage:
 
-The general principle is to follow the InterWorx documentation as closely as
-possible while making the library operate in a more pythonic manner. For
-instance, actions are defined in the API using camelCase, but since snake
-case is more "pythonic" all the calls have been rewritten in snake case. i.e.
-`listUsers` becomes `list_users`.
+Follow the InterWorx API documentation as closely as possible. This wrapper
+does no error checking before sending commands to the InterWorx server.
 
-Commands are formed as
-`<instance>.<nodeworx/siteworx>.<controller>.<action>`.
-For example, if I wanted to use the FTP controller to add an account to siteworx account, the format would be `server.siteworx.ftp.add(params)`.
+A basic usage is found below:
 
-Obviously, you can also assign anything for a lower variable if you'll be working in one particular area in your script. For instance, if you're only using siteworx calls, you could always set `siteworx = server.siteworx` and then make a call to `siteworx.ftp.add(params)`
+    Iworx_Object.request(controller, action, params)
 
-### Basic Examples:
+`controller` is equal to the controllers defined in the API documentation.
+Examples include: `/nodeworx/cron`, `/nodeworx/dns`, and may occasionally be
+nested further like `/nodeworx/dns/record`.
+
+`action` is equal to one of the actions defined on that specific controller's
+page. Examples for `/nodeworx/overview` include: `editProfile`,
+`listHostname`, `listIsClusterable`, `listLicenseKey`, `listLoadAverage`,
+`listServiceStatus`, etc.
+
+`params` are input parameters defined below the action on the specific
+controller's documentation page. To continue using `/nodeworx/overview` as an
+example, using the `editProfile` action can take some additional parameters,
+such as: `theme`, `language`, `menu_style`, `password`, and
+`confirm_password`. Some actions take no input parameters, so none need to be
+defined. Be sure to check the note on `siteworx_domain` below for a special
+case.
+
+As a real world example, let's be a bit verbose while we edit the theme our
+account uses to 'blue_steel'.
+
+    controller = '/nodeworx/overview'
+    action = 'editProfile'
+    Iworx_Object.request(controller, action, theme='blue_steel')
+
+### `siteworx_domain`
+
+While using any of the controllers beginning with `/siteworx`, you must
+define an additional parameter called `siteworx_domain`. This should be set
+to the domain of the account you wish to interact with. This lets the API
+know which account to complete the action on.
+
+## Basic Examples:
 
     # Connect to server:
     URL = 'myserver.domain.com'
     KEY = '<api key from NodeWorx>'
-    server = Server(URL, KEY)
+    iworx = Iworx(URL, KEY)
 
     # Get all NodeWorx users:
-    server.nodeworx.users.list_users()
+    iworx.request('/nodeworx/users', 'listUsers')
 
     # Get all SiteWorx users for domain.com:
-    server.siteworx.users.list_users(wd='domain.com')
+    iworx.request('/siteworx/users', 'listUsers', siteworx_domain='domain.com')
 
     # Create a NodeWorx user:
-    server.nodeworx.users.add(
+    iworx.request('/nodeworx/users',
+        'add',
         nickname='newuser', 
         email='existingemail@user.com',
         password='supersecurepassword11!',
         confirm_password='supersecurepassword11!')
 
     # Create a SiteWorx user:
-    server.siteworx.users.add(
-        wd='domain.com',
+    iworx.request('/siteworx/users', 
+        'add',
+        siteworx_domain='domain.com',
         nickname='newuser',
         email='existingemail@user.com',
         password='supersecurepassword!!1',
         confirm_password='supersecurepassword!!1')
 
-### Advanced Examples:
+## Advanced Examples:
 
     # Delete all Siteworx accounts:
-    for account in server.nodeworx.siteworx.list_accounts():
-        server.nodeworx.siteworx.delete(domain=account['domain'])
+    for account in iworx.request('/nodeworx/siteworx', 'listAccounts'):
+        iworx.request('/nodeworx/siteworx', 'delete', domain=account['domain'])
 
     # Delete all secondary Siteworx users (but not the master user):
-    for account in server.nodeworx.siteworx.list_accounts():
-        for deluser in server.siteworx.users.list_deletable(wd=account['domain']):
-            server.siteworx.users.delete(wd=account['domain'], user=deluser)
+    for account in iworx.request('/nodeworx/siteworx', 'listAccounts'):
+        for deluser in iworx.request('/siteworx/users', 'listDeletable', siteworx_domain=account['domain']):
+            iworx.request('/siteworx/users', 'delete', siteworx_domain=account['domain'], user=deluser[0])
 
-### Errors:
+## Errors:
 
-This library does some input checking but mostly relies on the API
-response to tell the user when things are incorrectly formed. When the server
-returns a non-`0` response, the output will simply show the server message the
-server returned.
+This library relies on the API response to tell the user when things are
+incorrectly formed. When the server returns a non-`0` response, the output
+will simply show the server message the server returned. For example:
+
+    Server responded with an exit code of: 11.
+    The server's response was: There was a problem validating the form. Please see details below.
+    options: This input is required
+    Usage: 
+    type
+    location
+    email_address 
+    options web|mail|dbs
+    exclude_extensions (One per Line).
